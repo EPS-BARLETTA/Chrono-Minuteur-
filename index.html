@@ -1,187 +1,388 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chronomètre de Course</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f4f4f4;
-        }
-        h1 {
-            color: #333;
-        }
-        #timer-controls button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 5px;
-            border: none;
-            border-radius: 5px;
-            background-color: #4CAF50;
-            color: white;
-            cursor: pointer;
-        }
-        #timer-display {
-            font-size: 2em;
-            margin-bottom: 20px;
-        }
-        #input-controls, #results {
-            margin-top: 20px;
-            width: 80%;
-            max-width: 400px;
-        }
-        #results ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        #results li {
-            background: #e0e0e0;
-            margin-bottom: 5px;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        #creator {
-            margin-top: 30px;
-            text-align: center;
-            font-size: 0.9em;
-        }
-        #creator a {
-            color: #4CAF50;
-            text-decoration: none;
-        }
-    </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MultiChrono</title>
+<meta name="color-scheme" content="light dark" />
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<style>
+/* ====== STYLE GLOBAL ====== */
+:root{--bg:#f7f7f8;--card:#fff;--text:#0f172a;--muted:#6b7280;--ring:#d1d5db;--footer:#9ca3af;
+--blue1:#2563eb;--blue2:#1d4ed8;--red1:#ef4444;--red2:#b91c1c;--yellow1:#eab308;--yellow2:#ca8a04;
+--radius:18px;--shadow:0 10px 25px rgba(0,0,0,.08)}
+.dark{--bg:#0b1020;--card:#0f172a;--text:#e5e7eb;--muted:#9aa1b2;--ring:#1f2937;--footer:#9aa1b2;
+--blue1:#3b82f6;--blue2:#1d4ed8;--red1:#f43f5e;--red2:#b91c1c;--yellow1:#f59e0b;--yellow2:#ca8a04;
+--shadow:0 16px 35px rgba(0,0,0,.35)}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial}
+.container{max-width:1000px;margin:0 auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+header.app{display:flex;align-items:center;justify-content:space-between;padding:14px 10px;border-bottom:1px solid var(--ring);background:var(--card)}
+.brand{font-weight:900;letter-spacing:.3px;font-size:clamp(22px,4vw,34px)}
+.switch{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--ring);background:var(--card);padding:6px 10px;border-radius:999px}
+.switch input{display:none}.switch .knob{width:36px;height:22px;border-radius:999px;background:#e5e7eb;position:relative}
+.switch .knob:after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:left .2s}
+.switch input:checked + .knob{background:#111827}.switch input:checked + .knob:after{left:16px}
+nav.cards{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:720px){nav.cards{grid-template-columns:1fr 1fr}}
+.card{background:var(--card);border:1px solid var(--ring);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
+.btn{appearance:none;border:0;border-radius:14px;padding:14px 16px;cursor:pointer;background:#e5e7eb;color:#111;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn-blue{background:linear-gradient(180deg,var(--blue1),var(--blue2));color:#fff}
+.btn-red{background:linear-gradient(180deg,var(--red1),var(--red2));color:#fff}
+.btn-yellow{background:linear-gradient(180deg,var(--yellow1),var(--yellow2));color:#111}
+.row{display:flex;flex-wrap:wrap;gap:10px}.row>*{flex:1 1 240px}
+.field{display:flex;flex-direction:column;gap:6px}.field span{color:var(--muted);font-size:14px}
+.field input{padding:12px 14px;border-radius:12px;border:1px solid var(--ring);background:transparent;color:var(--text);font-size:16px}
+.time{font-weight:900;font-size:clamp(40px,8vw,86px);text-align:center;border:1px dashed var(--ring);border-radius:16px;padding:10px 8px}
+.controls{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.incs{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{border:1px solid var(--ring);background:transparent;color:var(--text);border-radius:999px;padding:10px 14px;font-weight:800;cursor:pointer}
+.chip:disabled{opacity:.5;cursor:not-allowed}
+.qr{margin-top:10px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.footer{margin-top:20px;padding:20px 10px 28px;text-align:center;color:var(--footer);border-top:1px solid var(--ring)}
+.hint{color:var(--muted);font-size:13px}
+.hidden{display:none !important}
+.blink{animation:blink .7s steps(1,end) infinite;border-color:var(--red1)!important;box-shadow:0 0 0 4px rgba(239,68,68,.15)}
+@keyframes blink{50%{color:var(--red1)}}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.tab-btn{padding:10px 12px;border:1px solid var(--ring);border-radius:10px;background:var(--card);cursor:pointer;font-weight:800}
+.tab-btn.active{outline:2px solid var(--blue1)}
+.section{display:none}.section.active{display:block}
+</style>
 </head>
 <body>
+<header class="app">
+  <div class="brand">MultiChrono</div>
+  <label class="switch" title="Mode sombre">
+    <input id="darkToggle" type="checkbox"><span class="knob"></span>
+  </label>
+</header>
 
-    <h1>Chronomètre de Course</h1>
-
-    <div id="input-controls">
-        <label for="total-distance">Distance Totale (m) :</label>
-        <input type="number" id="total-distance" value="800">
-        <label for="intermediate-distance">Distance Intermédiaire (m) :</label>
-        <input type="number" id="intermediate-distance" value="200">
+<div class="container">
+  <!-- Navigation -->
+  <div class="card">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="home">🏠 Accueil</button>
+      <button class="tab-btn" data-tab="s6">⏱️ 6 min</button>
+      <button class="tab-btn" data-tab="s12">⏱️ 12 min</button>
+      <button class="tab-btn" data-tab="libre">⏱️ Libre</button>
+      <button class="tab-btn" data-tab="duel">⚔️ Duel</button>
     </div>
+  </div>
 
-    <div id="timer-display">00:00:00</div>
-
-    <div id="timer-controls">
-        <button id="start-button">Démarrer</button>
-        <button id="intermediate-button">Temps Intermédiaire</button>
-        <button id="stop-button">Arrêter</button>
-        <button id="reset-button">Réinitialiser</button>
+  <!-- Accueil -->
+  <section id="home" class="section active">
+    <div class="card">
+      <p class="hint">Choisis un module. QR codes compatibles ScanProf (Nom, Prénom, Classe + données du test). Export CSV disponible.</p>
+      <nav class="cards">
+        <a class="btn btn-blue" data-tab-link="s6">⏱️ Chrono 6 min</a>
+        <a class="btn btn-blue" data-tab-link="s12">⏱️ Chrono 12 min</a>
+        <a class="btn btn-blue" data-tab-link="libre">⏱️ Chrono libre</a>
+        <a class="btn btn-red" data-tab-link="duel">⚔️ Duel</a>
+      </nav>
     </div>
+  </section>
 
-    <div id="results">
-        <h3>Temps Intermédiaires</h3>
-        <ul id="time-list"></ul>
-        <p id="final-result"></p>
+  <!-- 6 minutes -->
+  <section id="s6" class="section">
+    <div class="card">
+      <h2>6 minutes</h2>
+      <div class="row">
+        <label class="field"><span>Nom</span><input id="s6_nom" type="text"></label>
+        <label class="field"><span>Prénom</span><input id="s6_prenom" type="text"></label>
+        <label class="field"><span>Classe</span><input id="s6_classe" type="text"></label>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <label class="field"><span>Distance d’un tour (m)</span><input id="s6_lap" type="number" value="200"></label>
+      </div>
+      <div id="s6_time" class="time">06:00</div>
+      <div class="controls">
+        <button id="s6_start" class="btn btn-blue">Démarrer</button>
+        <button id="s6_stop" class="btn btn-red" disabled>Stop</button>
+        <button id="s6_reset" class="btn" disabled>Reset</button>
+      </div>
+      <div class="incs">
+        <button class="chip" data-s6-inc="0.25" disabled>+¼ tour</button>
+        <button class="chip" data-s6-inc="0.5" disabled>+½ tour</button>
+        <button class="chip" data-s6-inc="0.75" disabled>+¾ tour</button>
+        <button class="chip" data-s6-inc="1" disabled>+1 tour</button>
+      </div>
+      <div class="qr" id="s6_qr"></div>
+      <div class="controls">
+        <button id="s6_csv" class="btn">Exporter CSV</button>
+      </div>
     </div>
+  </section>
 
-    <div id="creator">
-        <p>Créé par Jérôme BARLETTA</p>
-        <a href="http://bjerome.eklablog.com/accueil-c30088056" target="_blank">Accéder au blog</a>
+  <!-- 12 minutes -->
+  <section id="s12" class="section">
+    <div class="card">
+      <h2>12 minutes</h2>
+      <div class="row">
+        <label class="field"><span>Nom</span><input id="s12_nom" type="text"></label>
+        <label class="field"><span>Prénom</span><input id="s12_prenom" type="text"></label>
+        <label class="field"><span>Classe</span><input id="s12_classe" type="text"></label>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <label class="field"><span>Distance d’un tour (m)</span><input id="s12_lap" type="number" value="200"></label>
+      </div>
+      <div id="s12_time" class="time">12:00</div>
+      <div class="controls">
+        <button id="s12_start" class="btn btn-blue">Démarrer</button>
+        <button id="s12_stop" class="btn btn-red" disabled>Stop</button>
+        <button id="s12_reset" class="btn" disabled>Reset</button>
+      </div>
+      <div class="incs">
+        <button class="chip" data-s12-inc="0.25" disabled>+¼ tour</button>
+        <button class="chip" data-s12-inc="0.5" disabled>+½ tour</button>
+        <button class="chip" data-s12-inc="0.75" disabled>+¾ tour</button>
+        <button class="chip" data-s12-inc="1" disabled>+1 tour</button>
+      </div>
+      <div class="qr" id="s12_qr"></div>
+      <div class="controls">
+        <button id="s12_csv" class="btn">Exporter CSV</button>
+      </div>
     </div>
+  </section>
 
-    <script>
-        let startTime = null;
-        let intervalId = null;
-        let intermediateTimes = [];
-        let totalDistance = 800;
-        let intermediateDistance = 200;
-        let currentDistance = 0;
+  <!-- Libre -->
+  <section id="libre" class="section">
+    <div class="card">
+      <h2>Chrono libre</h2>
+      <div class="row">
+        <label class="field"><span>Nom</span><input id="l_nom" type="text"></label>
+        <label class="field"><span>Prénom</span><input id="l_prenom" type="text"></label>
+        <label class="field"><span>Classe</span><input id="l_classe" type="text"></label>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <label class="field"><span>Distance d’un tour (m)</span><input id="l_lap" type="number" value="200"></label>
+      </div>
+      <div id="l_time" class="time">00:00</div>
+      <div class="controls">
+        <button id="l_start" class="btn btn-blue">Démarrer</button>
+        <button id="l_stop" class="btn btn-red" disabled>Stop</button>
+        <button id="l_reset" class="btn" disabled>Reset</button>
+      </div>
+      <div class="incs">
+        <button class="chip" data-l-inc="0.25" disabled>+¼ tour</button>
+        <button class="chip" data-l-inc="0.5" disabled>+½ tour</button>
+        <button class="chip" data-l-inc="0.75" disabled>+¾ tour</button>
+        <button class="chip" data-l-inc="1" disabled>+1 tour</button>
+      </div>
+      <div class="qr" id="l_qr"></div>
+      <div class="controls">
+        <button id="l_csv" class="btn">Exporter CSV</button>
+      </div>
+    </div>
+  </section>
 
-        const timerDisplay = document.getElementById('timer-display');
-        const timeList = document.getElementById('time-list');
-        const finalResult = document.getElementById('final-result');
+  <!-- Duel -->
+  <section id="duel" class="section">
+    <div class="card">
+      <h2>Duel</h2>
+      <div class="row">
+        <label class="field"><span>Distance d’un tour (m)</span><input id="d_lap" type="number" value="200"></label>
+      </div>
+      <div class="row">
+        <div class="card" style="flex:1">
+          <strong>Coureur A</strong>
+          <div class="row">
+            <label class="field"><span>Nom</span><input id="d_nomA" type="text"></label>
+            <label class="field"><span>Prénom</span><input id="d_prenomA" type="text"></label>
+            <label class="field"><span>Classe</span><input id="d_classeA" type="text"></label>
+          </div>
+          <div id="d_timeA" class="time">00:00</div>
+          <div class="controls"><button id="d_stopA" class="btn btn-red" disabled>Stop A</button></div>
+          <div class="incs">
+            <button class="chip" data-da="0.25" disabled>+¼</button>
+            <button class="chip" data-da="0.5"  disabled>+½</button>
+            <button class="chip" data-da="0.75" disabled>+¾</button>
+            <button class="chip" data-da="1"    disabled>+1</button>
+          </div>
+        </div>
+        <div class="card" style="flex:1">
+          <strong>Coureur B</strong>
+          <div class="row">
+            <label class="field"><span>Nom</span><input id="d_nomB" type="text"></label>
+            <label class="field"><span>Prénom</span><input id="d_prenomB" type="text"></label>
+            <label class="field"><span>Classe</span><input id="d_classeB" type="text"></label>
+          </div>
+          <div id="d_timeB" class="time">00:00</div>
+          <div class="controls"><button id="d_stopB" class="btn btn-red" disabled>Stop B</button></div>
+          <div class="incs">
+            <button class="chip" data-db="0.25" disabled>+¼</button>
+            <button class="chip" data-db="0.5"  disabled>+½</button>
+            <button class="chip" data-db="0.75" disabled>+¾</button>
+            <button class="chip" data-db="1"    disabled>+1</button>
+          </div>
+        </div>
+      </div>
+      <div class="controls" style="margin-top:8px">
+        <button id="d_start" class="btn btn-blue">Démarrer le duel</button>
+        <button id="d_reset" class="btn" disabled>Reset</button>
+      </div>
+      <div class="qr" id="d_qr"></div>
+      <div class="controls"><button id="d_csv" class="btn">Exporter CSV</button></div>
+    </div>
+  </section>
+</div>
 
-        const startButton = document.getElementById('start-button');
-        const intermediateButton = document.getElementById('intermediate-button');
-        const stopButton = document.getElementById('stop-button');
-        const resetButton = document.getElementById('reset-button');
+<footer class="footer">
+  MultiChrono - L'Équipe EPS Lycée Vauban - LUXEMBOURG - JB
+</footer>
 
-        const totalDistanceInput = document.getElementById('total-distance');
-        const intermediateDistanceInput = document.getElementById('intermediate-distance');
+<!-- QRCode lib -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+/* ====== JS GLOBAL (sans dépendances locales) ====== */
+const qs=(s,el=document)=>el.querySelector(s);
+const $all=(s,el=document)=>Array.from(el.querySelectorAll(s));
+const debounce=(fn,w=200)=>{let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),w)}}
+const fmt=(s)=>{s=Math.max(0,Math.round(s));const m=String(Math.floor(s/60)).padStart(2,'0');const ss=String(s%60).padStart(2,'0');return m+':'+ss;}
+const makeQR=(el,payload)=>{if(!el)return;el.innerHTML='';new QRCode(el,{text:JSON.stringify(payload),width:200,height:200});}
+const store={};
+const saveRow=(key,row)=>{(store[key]??=[]).push(row);store[key]=store[key];}
+const exportCsv=(key,filename)=>{const rows=store[key]||[];if(!rows.length){alert("Aucune donnée.");return}
+  const headers=Object.keys(rows[0]);const csv=[headers.join(";"),...rows.map(r=>headers.map(h=>r[h]??"").join(";"))].join("\n");
+  const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;a.click();}
 
-        totalDistanceInput.addEventListener('input', () => {
-            totalDistance = parseInt(totalDistanceInput.value);
-        });
+(function theme(){const k='multichrono_theme';const saved=localStorage.getItem(k);
+  const prefers=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const startDark=saved?saved==='dark':prefers;document.documentElement.classList.toggle('dark',startDark);
+  const t=qs('#darkToggle'); if(t){t.checked=startDark; t.addEventListener('change',e=>{document.documentElement.classList.toggle('dark',e.target.checked);localStorage.setItem(k,e.target.checked?'dark':'light')})}
+})();
 
-        intermediateDistanceInput.addEventListener('input', () => {
-            intermediateDistance = parseInt(intermediateDistanceInput.value);
-        });
+/* Tabs */
+$all('[data-tab]').forEach(b=>b.addEventListener('click',()=>{
+  const id=b.getAttribute('data-tab');
+  $all('.tab-btn').forEach(x=>x.classList.toggle('active',x===b));
+  $all('.section').forEach(s=>s.classList.toggle('active',s.id===id));
+}));
+$all('[data-tab-link]').forEach(a=>a.addEventListener('click',()=>{
+  const id=a.getAttribute('data-tab-link');
+  $all('.tab-btn').forEach(x=>x.classList.toggle('active',x.getAttribute('data-tab')===id));
+  $all('.section').forEach(s=>s.classList.toggle('active',s.id===id));
+}));
 
-        function formatTime(seconds) {
-            const hours = Math.floor(seconds / 3600);
-            const minutes = Math.floor((seconds % 3600) / 60);
-            const remainingSeconds = Math.floor(seconds % 60);
-            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-        }
+/* ====== 6 minutes ====== */
+(function(){
+  const nom=qs('#s6_nom'), prenom=qs('#s6_prenom'), classe=qs('#s6_classe'), lap=qs('#s6_lap');
+  const time=qs('#s6_time'), start=qs('#s6_start'), stop=qs('#s6_stop'), reset=qs('#s6_reset');
+  const qr=qs('#s6_qr'), incs=$all('[data-s6-inc]'), csv=qs('#s6_csv');
+  const TARGET=6*60; let running=false, t0=0, raf=0, laps=0;
 
-        function calculateSpeed(timeInSeconds, distance) {
-            if (timeInSeconds === 0) return 0;
-            return ((distance / timeInSeconds) * 3.6).toFixed(2);
-        }
+  const setUI=(r)=>{running=r; start.disabled=r; stop.disabled=!r; reset.disabled=r; incs.forEach(b=>b.disabled=!r);}
+  const tick=()=>{const rem=TARGET-(performance.now()-t0)/1000; if(rem<=0){time.classList.remove('blink'); time.textContent='00:00'; finish(); return}
+    time.textContent=fmt(Math.ceil(rem)); time.classList.toggle('blink', rem<=10); raf=requestAnimationFrame(tick); }
+  const finish=()=>{cancelAnimationFrame(raf); setUI(false);
+    const payload={mode:'6min', nom:nom.value.trim(), prenom:prenom.value.trim(), classe:classe.value.trim(),
+      duree_s:TARGET, distance_m:Math.round((parseFloat(lap.value)||0)*laps)};
+    makeQR(qr,payload); saveRow('s6',payload); }
 
-        function updateTimer() {
-            const elapsed = Math.floor((new Date() - startTime) / 1000);
-            timerDisplay.textContent = formatTime(elapsed);
-        }
+  start.addEventListener('click',()=>{ if(!nom.value||!prenom.value||!classe.value){alert('Nom, Prénom, Classe.');return}
+    laps=0; t0=performance.now(); time.textContent='06:00'; setUI(true); tick(); });
+  stop.addEventListener('click',finish);
+  reset.addEventListener('click',()=>{cancelAnimationFrame(raf); setUI(false); time.textContent='06:00'; time.classList.remove('blink'); qr.innerHTML=''; laps=0;});
+  incs.forEach(b=>b.addEventListener('click',()=>{ if(!running) return; laps+=parseFloat(b.getAttribute('data-s6-inc')||'0'); }));
+  csv.addEventListener('click',()=>exportCsv('s6','multichrono_6min.csv'));
+})();
 
-        startButton.addEventListener('click', () => {
-            if (!intervalId) {
-                startTime = new Date();
-                intervalId = setInterval(updateTimer, 1000);
-                currentDistance = 0;
-                intermediateTimes = [];
-                timeList.innerHTML = '';
-                finalResult.textContent = '';
-            }
-        });
+/* ====== 12 minutes ====== */
+(function(){
+  const nom=qs('#s12_nom'), prenom=qs('#s12_prenom'), classe=qs('#s12_classe'), lap=qs('#s12_lap');
+  const time=qs('#s12_time'), start=qs('#s12_start'), stop=qs('#s12_stop'), reset=qs('#s12_reset');
+  const qr=qs('#s12_qr'), incs=$all('[data-s12-inc]'), csv=qs('#s12_csv');
+  const TARGET=12*60; let running=false, t0=0, raf=0, laps=0;
 
-        intermediateButton.addEventListener('click', () => {
-            if (intervalId && currentDistance + intermediateDistance <= totalDistance) {
-                const now = new Date();
-                const elapsed = Math.floor((now - startTime) / 1000);
-                currentDistance += intermediateDistance;
+  const setUI=(r)=>{running=r; start.disabled=r; stop.disabled=!r; reset.disabled=r; incs.forEach(b=>b.disabled=!r);}
+  const tick=()=>{const rem=TARGET-(performance.now()-t0)/1000; if(rem<=0){time.classList.remove('blink'); time.textContent='00:00'; finish(); return}
+    time.textContent=fmt(Math.ceil(rem)); time.classList.toggle('blink', rem<=10); raf=requestAnimationFrame(tick); }
+  const finish=()=>{cancelAnimationFrame(raf); setUI(false);
+    const payload={mode:'12min', nom:nom.value.trim(), prenom:prenom.value.trim(), classe:classe.value.trim(),
+      duree_s:TARGET, distance_m:Math.round((parseFloat(lap.value)||0)*laps)};
+    makeQR(qr,payload); saveRow('s12',payload); }
 
-                const speed = calculateSpeed(elapsed, currentDistance);
-                const timeEntry = document.createElement('li');
-                timeEntry.textContent = `Distance: ${currentDistance}m - Temps: ${formatTime(elapsed)} - Vitesse: ${speed} km/h`;
-                timeList.appendChild(timeEntry);
-            }
-        });
+  start.addEventListener('click',()=>{ if(!nom.value||!prenom.value||!classe.value){alert('Nom, Prénom, Classe.');return}
+    laps=0; t0=performance.now(); time.textContent='12:00'; setUI(true); tick(); });
+  stop.addEventListener('click',finish);
+  reset.addEventListener('click',()=>{cancelAnimationFrame(raf); setUI(false); time.textContent='12:00'; time.classList.remove('blink'); qr.innerHTML=''; laps=0;});
+  incs.forEach(b=>b.addEventListener('click',()=>{ if(!running) return; laps+=parseFloat(b.getAttribute('data-s12-inc')||'0'); }));
+  csv.addEventListener('click',()=>exportCsv('s12','multichrono_12min.csv'));
+})();
 
-        stopButton.addEventListener('click', () => {
-            if (intervalId) {
-                clearInterval(intervalId);
-                intervalId = null;
+/* ====== Libre (chronomètre ascendant) ====== */
+(function(){
+  const nom=qs('#l_nom'), prenom=qs('#l_prenom'), classe=qs('#l_classe'), lap=qs('#l_lap');
+  const time=qs('#l_time'), start=qs('#l_start'), stop=qs('#l_stop'), reset=qs('#l_reset');
+  const qr=qs('#l_qr'), incs=$all('[data-l-inc]'), csv=qs('#l_csv');
+  let running=false, t0=0, raf=0, laps=0;
 
-                const elapsed = Math.floor((new Date() - startTime) / 1000);
-                const averageSpeed = calculateSpeed(elapsed, totalDistance);
-                finalResult.textContent = `Temps final: ${formatTime(elapsed)}, Vitesse moyenne: ${averageSpeed} km/h`;
-            }
-        });
+  const setUI=(r)=>{running=r; start.disabled=r; stop.disabled=!r; reset.disabled=r; incs.forEach(b=>b.disabled=!r);}
+  const tick=()=>{const sec=(performance.now()-t0)/1000; time.textContent=fmt(sec); raf=requestAnimationFrame(tick); }
+  const finish=()=>{cancelAnimationFrame(raf); setUI(false);
+    const payload={mode:'libre', nom:nom.value.trim(), prenom:prenom.value.trim(), classe:classe.value.trim(),
+      duree_s:Math.round((performance.now()-t0)/1000), distance_m:Math.round((parseFloat(lap.value)||0)*laps)};
+    makeQR(qr,payload); saveRow('libre',payload); }
 
-        resetButton.addEventListener('click', () => {
-            clearInterval(intervalId);
-            intervalId = null;
-            startTime = null;
-            currentDistance = 0;
-            timerDisplay.textContent = '00:00:00';
-            timeList.innerHTML = '';
-            finalResult.textContent = '';
-        });
-    </script>
+  start.addEventListener('click',()=>{ if(!nom.value||!prenom.value||!classe.value){alert('Nom, Prénom, Classe.');return}
+    laps=0; t0=performance.now(); setUI(true); tick(); });
+  stop.addEventListener('click',finish);
+  reset.addEventListener('click',()=>{cancelAnimationFrame(raf); setUI(false); time.textContent='00:00'; qr.innerHTML=''; laps=0;});
+  incs.forEach(b=>b.addEventListener('click',()=>{ if(!running) return; laps+=parseFloat(b.getAttribute('data-l-inc')||'0'); }));
+  csv.addEventListener('click',()=>exportCsv('libre','multichrono_libre.csv'));
+})();
 
+/* ====== Duel ====== */
+(function(){
+  const lap=qs('#d_lap'), start=qs('#d_start'), reset=qs('#d_reset'), qr=qs('#d_qr'), csvBtn=qs('#d_csv');
+  const nomA=qs('#d_nomA'), prenomA=qs('#d_prenomA'), classeA=qs('#d_classeA'), tA=qs('#d_timeA'), stopA=qs('#d_stopA');
+  const nomB=qs('#d_nomB'), prenomB=qs('#d_prenomB'), classeB=qs('#d_classeB'), tB=qs('#d_timeB'), stopB=qs('#d_stopB');
+  const incA=$all('[data-da]'), incB=$all('[data-db]');
+
+  let running=false, t0=0, raf=0, timeA=null, timeB=null, lapsA=0, lapsB=0;
+
+  const fmt2=(sec)=>fmt(Math.floor(sec));
+  const render=()=>{ if(!running) return; const s=(performance.now()-t0)/1000;
+    if(timeA===null) tA.textContent=fmt2(s);
+    if(timeB===null) tB.textContent=fmt2(s);
+    raf=requestAnimationFrame(render);
+  };
+
+  start.addEventListener('click',()=>{
+    if(!nomA.value||!prenomA.value||!classeA.value||!nomB.value||!prenomB.value||!classeB.value){alert('Infos A et B requises.');return}
+    running=true; t0=performance.now(); timeA=null; timeB=null; lapsA=0; lapsB=0;
+    start.disabled=true; reset.disabled=false; stopA.disabled=false; stopB.disabled=false;
+    incA.forEach(b=>b.disabled=false); incB.forEach(b=>b.disabled=false); render();
+  });
+
+  stopA.addEventListener('click',()=>{ if(timeA!==null) return; timeA=(performance.now()-t0)/1000; stopA.disabled=true; incA.forEach(b=>b.disabled=true); if(timeB!==null){running=false; cancelAnimationFrame(raf);} });
+  stopB.addEventListener('click',()=>{ if(timeB!==null) return; timeB=(performance.now()-t0)/1000; stopB.disabled=true; incB.forEach(b=>b.disabled=true); if(timeA!==null){running=false; cancelAnimationFrame(raf);} });
+
+  incA.forEach(b=>b.addEventListener('click',()=>{ lapsA+=parseFloat(b.getAttribute('data-da')||'0'); }));
+  incB.forEach(b=>b.addEventListener('click',()=>{ lapsB+=parseFloat(b.getAttribute('data-db')||'0'); }));
+
+  reset.addEventListener('click',()=>{running=false; cancelAnimationFrame(raf);
+    start.disabled=false; reset.disabled=true; stopA.disabled=true; stopB.disabled=true;
+    incA.forEach(b=>b.disabled=true); incB.forEach(b=>b.disabled=true);
+    tA.textContent='00:00'; tB.textContent='00:00'; qr.innerHTML=''; });
+
+  // Génération QR quand les deux ont fini (ou bouton manuel si besoin)
+  const gen = ()=>{
+    if(timeA===null||timeB===null){alert('Les deux coureurs doivent terminer.');return}
+    const d=parseFloat(lap.value)||0;
+    const payload={mode:'duel', eleves:[
+      {nom:nomA.value.trim(), prenom:prenomA.value.trim(), classe:classeA.value.trim(), duree_s:Math.round(timeA), distance_m:Math.round(lapsA*d)},
+      {nom:nomB.value.trim(), prenom:prenomB.value.trim(), classe:classeB.value.trim(), duree_s:Math.round(timeB), distance_m:Math.round(lapsB*d)}
+    ]};
+    makeQR(qr,payload);
+    saveRow('duel', payload.eleves[0]); saveRow('duel', payload.eleves[1]);
+  };
+  // QR auto quand les deux ont stoppé
+  const observeFinish=()=>{ if(timeA!==null && timeB!==null) gen(); else requestAnimationFrame(observeFinish); };
+  observeFinish();
+
+  csvBtn.addEventListener('click',()=>exportCsv('duel','multichrono_duel.csv'));
+})();
+</script>
 </body>
 </html>
