@@ -4,32 +4,54 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Aide — Chrono-Minuteur</title>
 <style>
-  :root{--bg:#0f172a;--panel:#111827;--text:#e5e7eb;--muted:#94a3b8}
+  :root{
+    --bg:#0f172a;--text:#e5e7eb;--panel:#0b1222;
+    --g1a:#6366f1;--g1b:#8b5cf6;--g2a:#06b6d4;--g2b:#22c55e;
+    --g3a:#f59e0b;--g3b:#f97316;--g4a:#ec4899;--g4b:#ef4444;
+  }
   *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,Segoe UI,Roboto}
   .wrap{min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto}
   .main{padding:24px;display:grid;place-items:center}
-  .card{background:var(--panel);border:1px solid #1f2937;border-radius:16px;padding:24px;max-width:900px;width:94vw}
-  h1{margin-top:0}
-  .back{margin:6px 0 14px;display:inline-block;color:#a3aed5;text-decoration:none}
+  .card{background:var(--panel);border:1px solid #1f2937;border-radius:18px;padding:24px;max-width:1000px;width:94vw}
+  h1{margin:0 0 10px 0}
+  .back{margin:6px 0 14px;display:inline-block;color:#c7d2fe;text-decoration:none}
   footer{background:#e5e7eb;color:#111827;padding:10px 12px;text-align:center;font-weight:700}
-  ul{margin-top:8px}
+  .grid{display:grid;gap:14px}
+  @media(min-width:840px){.grid{grid-template-columns:repeat(2,1fr)}}
+  .block{border-radius:14px;padding:16px;border:1px solid rgba(255,255,255,.18);box-shadow:0 6px 18px rgba(0,0,0,.25)}
+  .b1{background:linear-gradient(135deg,var(--g1a),var(--g1b))}
+  .b2{background:linear-gradient(135deg,var(--g2a),var(--g2b))}
+  .b3{background:linear-gradient(135deg,var(--g3a),var(--g3b))}
+  .b4{background:linear-gradient(135deg,var(--g4a),var(--g4b))}
+  .inner{background:rgba(11,18,34,.85);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:12px}
+  ul{margin:8px 0 0 18px}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header style="padding:12px 16px"><a class="back" href="./index.html">← Accueil</a></header>
   <main class="main">
-    <article class="card">
+    <div class="card">
       <h1>Aide — Utilisation</h1>
-      <p><b>Chrono simple</b> : plein écran, visibilité maximale. Boutons Start / Stop / Reset.</p>
-      <p><b>Chrono avec vitesse</b> : saisis Nom, Prénom, Classe, Sexe (M/F), distance (ex. 100 m), lance le chrono, arrête à l’arrivée → temps + vitesse calculés. Un bouton permet de générer un QR <i>ScanProf</i>.</p>
-      <p><b>Minuteur simple</b> : règle la durée, lance → un rond se réduit jusqu’à 0 avec le temps restant affiché.</p>
-      <p><b>Minuteur avec distance</b> : règle la durée + la longueur de piste (ex. 120 m). Lance → clique <i>+1 tour</i> à chaque passage. À la fin, ajoute éventuellement 1/4, 1/2 ou 3/4 de tour. Distance totale, vitesse moyenne, VMA (si durée ≥ 6 min), QR <i>ScanProf</i>.</p>
-      <ul>
-        <li>Mode plein écran disponible dans les modes pour une meilleure lisibilité (iPad).</li>
-        <li>Les QR sont sur fond blanc avec marge (quiet zone) pour être scannés dans <b>ScanProf</b>.</li>
-      </ul>
-    </article>
+      <div class="grid">
+        <section class="block b1"><div class="inner">
+          <h3>Chrono simple</h3>
+          <p>Plein écran, visibilité maximale. Boutons <b>Démarrer</b>, <b>Stop</b>, <b>Réinitialiser</b>.</p>
+        </div></section>
+        <section class="block b2"><div class="inner">
+          <h3>Chrono avec vitesse</h3>
+          <p>Saisir identité (Nom, Prénom, Classe, Sexe M/F) + <b>Distance</b>. Lancer, arrêter à l’arrivée : le <b>temps</b> et la <b>vitesse</b> s’affichent. Générer un QR <i>ScanProf</i>.</p>
+        </div></section>
+        <section class="block b3"><div class="inner">
+          <h3>Minuteur simple</h3>
+          <p>Régler <b>minutes + secondes</b>, lancer : le cercle se réduit jusqu’à 0. Utiliser le plein écran pour une meilleure lisibilité.</p>
+        </div></section>
+        <section class="block b4"><div class="inner">
+          <h3>Minuteur distance &amp; vitesse</h3>
+          <p>Régler <b>durée</b> + <b>longueur de piste</b>. Pendant le décompte, appuyer sur <b>+1 tour</b> à chaque passage. À la fin, choisir une <b>fraction de tour</b> (¼, ½, ¾). Calcul de la <b>distance totale</b>, de la <b>vitesse moyenne</b> et de la <b>VMA</b> si durée ≥ 6’ + QR <i>ScanProf</i>.</p>
+        </div></section>
+      </div>
+    </div>
   </main>
   <footer>ChronoMinuteur - Equipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
 </div>

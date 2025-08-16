@@ -4,20 +4,36 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Chrono-Minuteur — Modes</title>
 <style>
-  :root{--bg:#0f172a;--panel:#111827;--text:#e5e7eb;--muted:#94a3b8;--accent:#4f46e5;--ok:#10b981;--warn:#f59e0b;--ring:rgba(79,70,229,.35)}
+  :root{
+    --bg:#0f172a;--panel:#0b1222;--text:#e5e7eb;--muted:#a5b4fc;
+    --ring:rgba(79,70,229,.35);
+    --g1a:#6366f1;--g1b:#8b5cf6; /* Chrono simple */
+    --g2a:#06b6d4;--g2b:#22c55e; /* Chrono vitesse */
+    --g3a:#f59e0b;--g3b:#f97316; /* Minuteur simple */
+    --g4a:#ec4899;--g4b:#ef4444; /* Minuteur distance */
+  }
   *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 system-ui,Segoe UI,Roboto}
   .wrap{min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto}
   .main{padding:24px;display:grid;place-items:center}
-  .card{background:var(--panel);border:1px solid #1f2937;border-radius:16px;padding:24px;max-width:1000px;width:94vw;box-shadow:0 10px 30px rgba(0,0,0,.35)}
-  h1{margin:6px 0 18px;text-align:center}
-  .grid{display:grid;gap:14px}
-  @media(min-width:800px){.grid{grid-template-columns:repeat(2,1fr)}}
-  .tile{border:1px solid #23304a;border-radius:14px;padding:16px;display:grid;gap:10px}
-  .tile h2{margin:0;font-size:1.1rem}
-  .btn{padding:12px 16px;border:0;border-radius:12px;font-weight:800;cursor:pointer}
+  .card{background:#111827;border:1px solid #1f2937;border-radius:18px;padding:24px;max-width:1100px;width:94vw;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  h1{margin:6px 0 18px;text-align:center;letter-spacing:.3px}
+  .grid{display:grid;gap:16px}
+  @media(min-width:840px){.grid{grid-template-columns:repeat(2,1fr)}}
+  .tile{border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:18px;display:grid;gap:12px;justify-items:center;text-align:center;box-shadow:0 10px 26px rgba(0,0,0,.25)}
+  .tile h2{margin:0;font-size:1.2rem}
+  .tile p{margin:0;color:#e8ecffb3}
+  .grad-1{background:linear-gradient(135deg,var(--g1a),var(--g1b))}
+  .grad-2{background:linear-gradient(135deg,var(--g2a),var(--g2b))}
+  .grad-3{background:linear-gradient(135deg,var(--g3a),var(--g3b))}
+  .grad-4{background:linear-gradient(135deg,var(--g4a),var(--g4b))}
+  .tile .inner{background:rgba(11,18,34,.8);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:16px;width:100%}
+  .btn{padding:12px 16px;border:0;border-radius:12px;font-weight:900;cursor:pointer;min-width:180px}
   .btn:focus{outline:none;box-shadow:0 0 0 4px var(--ring)}
-  .btn-accent{background:var(--accent);color:#fff}
-  .back{margin-bottom:14px;display:inline-block;color:var(--muted);text-decoration:none}
+  .btn-1{background:#1f29ca;color:#fff}
+  .btn-2{background:#0ea5a0;color:#07221f}
+  .btn-3{background:#b45309;color:#1f1304}
+  .btn-4{background:#be185d;color:#fff}
+  .back{margin-bottom:14px;display:inline-block;color:#c7d2fe;text-decoration:none}
   footer{background:#e5e7eb;color:#111827;padding:10px 12px;text-align:center;font-weight:700}
 </style>
 </head>
@@ -28,25 +44,41 @@
     <div class="card">
       <h1>Choisir un mode</h1>
       <div class="grid">
-        <div class="tile">
-          <h2>Chrono simple (plein écran)</h2>
-          <p class="muted">Grand affichage, contrôles Start / Stop / Reset.</p>
-          <a href="./chrono-simple.html"><button class="btn btn-accent">Ouvrir</button></a>
+        <div class="tile grad-1">
+          <div class="inner">
+            <h2>Chrono simple (plein écran)</h2>
+            <p>Grand affichage, contrôles Start / Stop / Reset.</p>
+            <div style="margin-top:10px;display:grid;place-items:center">
+              <a href="./chrono-simple.html"><button class="btn btn-1">Ouvrir</button></a>
+            </div>
+          </div>
         </div>
-        <div class="tile">
-          <h2>Chrono avec vitesse</h2>
-          <p class="muted">Paramètre une distance (ex. 100 m). Temps + vitesse à l’arrêt. QR compatible ScanProf.</p>
-          <a href="./chrono-vitesse.html"><button class="btn btn-accent">Ouvrir</button></a>
+        <div class="tile grad-2">
+          <div class="inner">
+            <h2>Chrono avec vitesse</h2>
+            <p>Distance (ex. 100 m). Temps + vitesse. QR ScanProf.</p>
+            <div style="margin-top:10px;display:grid;place-items:center">
+              <a href="./chrono-vitesse.html"><button class="btn btn-2">Ouvrir</button></a>
+            </div>
+          </div>
         </div>
-        <div class="tile">
-          <h2>Minuteur simple (plein écran)</h2>
-          <p class="muted">Décompte visuel en rond + temps restant au centre.</p>
-          <a href="./minuteur-simple.html"><button class="btn btn-accent">Ouvrir</button></a>
+        <div class="tile grad-3">
+          <div class="inner">
+            <h2>Minuteur simple (plein écran)</h2>
+            <p>Décompte visuel en rond + temps restant.</p>
+            <div style="margin-top:10px;display:grid;place-items:center">
+              <a href="./minuteur-simple.html"><button class="btn btn-3">Ouvrir</button></a>
+            </div>
+          </div>
         </div>
-        <div class="tile">
-          <h2>Minuteur avec distance & vitesse</h2>
-          <p class="muted">Durée + longueur de piste. Ajoute les tours. Distance totale, vitesse, fraction finale, QR & VMA ≥ 6’.</p>
-          <a href="./minuteur-distance.html"><button class="btn btn-accent">Ouvrir</button></a>
+        <div class="tile grad-4">
+          <div class="inner">
+            <h2>Minuteur distance & vitesse</h2>
+            <p>Durée + longueur de piste, tours, fraction finale, VMA ≥ 6’, QR.</p>
+            <div style="margin-top:10px;display:grid;place-items:center">
+              <a href="./minuteur-distance.html"><button class="btn btn-4">Ouvrir</button></a>
+            </div>
+          </div>
         </div>
       </div>
     </div>

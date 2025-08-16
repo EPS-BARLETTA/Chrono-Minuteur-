@@ -4,46 +4,55 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Fiche de sécurité — Chrono-Minuteur</title>
 <style>
-  :root{--bg:#0f172a;--panel:#111827;--text:#e5e7eb;--muted:#94a3b8}
+  :root{--bg:#0f172a;--text:#e5e7eb;--panel:#0b1222;--muted:#cbd5e1;
+        --s1:#06b6d4;--s2:#22c55e;--s3:#f59e0b;--s4:#f97316;}
   *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,Segoe UI,Roboto}
   .wrap{min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto}
   .main{padding:24px;display:grid;place-items:center}
-  .card{background:var(--panel);border:1px solid #1f2937;border-radius:16px;padding:24px;max-width:900px;width:94vw}
-  h1{margin-top:0}
-  .back{margin:6px 0 14px;display:inline-block;color:#a3aed5;text-decoration:none}
+  .card{background:var(--panel);border:1px solid #1f2937;border-radius:18px;padding:24px;max-width:1000px;width:94vw}
+  h1{margin:0 0 8px}
+  .back{margin:6px 0 14px;display:inline-block;color:#c7d2fe;text-decoration:none}
   footer{background:#e5e7eb;color:#111827;padding:10px 12px;text-align:center;font-weight:700}
-  ul{margin-top:8px}
+  .grid{display:grid;gap:14px}
+  .sec{border-radius:14px;padding:16px;border:1px solid rgba(255,255,255,.18);box-shadow:0 6px 18px rgba(0,0,0,.25);background:linear-gradient(135deg,var(--s1),var(--s2))}
+  .sec2{background:linear-gradient(135deg,var(--s3),var(--s4))}
+  .inner{background:rgba(11,18,34,.85);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:12px}
+  ul{margin:8px 0 0 18px}
+  .muted{color:var(--muted)}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header style="padding:12px 16px"><a class="back" href="./index.html">← Accueil</a></header>
   <main class="main">
-    <article class="card">
+    <div class="card">
       <h1>Fiche de sécurité — Principes & conduites</h1>
-      <h3>Avant l’effort</h3>
-      <ul>
-        <li>Échauffement progressif (5–10 min) : cardio léger + mobilisations articulaires.</li>
-        <li>Chaussures adaptées, lacets serrés, piste dégagée, hydratation disponible.</li>
-        <li>Pas d’exercice intense si douleur, fièvre ou malaise.</li>
-      </ul>
-      <h3>Pendant</h3>
-      <ul>
-        <li>Respect des trajectoires, dépassements signalés, pas d’arrêt brutal sur la piste.</li>
-        <li>Hydratation régulière, respect des consignes de l’enseignant.</li>
-      </ul>
-      <h3>Après</h3>
-      <ul>
-        <li>Retour au calme, étirements légers, hydratation.</li>
-      </ul>
-      <h3>Conduites à tenir</h3>
-      <ul>
-        <li><b>Chute / entorse :</b> protéger, glacer, surélever, évaluer la douleur. Alerter si gonflement anormal.</li>
-        <li><b>Malaise :</b> asseoir/allonger, libérer voies aériennes, surveiller, alerter si non amélioration.</li>
-        <li><b>Traumatisme grave :</b> ne pas mobiliser, sécuriser la zone, alerter immédiatement (112/15/18).</li>
-      </ul>
-      <p class="muted">Ce rappel ne remplace pas les protocoles de l’établissement.</p>
-    </article>
+      <div class="grid">
+        <section class="sec"><div class="inner">
+          <h3>Avant l’effort</h3>
+          <ul>
+            <li>Échauffement progressif (5–10 min) : cardio léger + mobilisations articulaires.</li>
+            <li>Chaussures adaptées, lacets serrés, piste dégagée, hydratation disponible.</li>
+            <li>Pas d’exercice intense si douleur, fièvre ou malaise.</li>
+          </ul>
+        </div></section>
+        <section class="sec sec2"><div class="inner">
+          <h3>Pendant / Après</h3>
+          <ul>
+            <li>Respect des trajectoires, dépassements signalés, pas d’arrêt brutal sur la piste.</li>
+            <li>Hydratation régulière, respect des consignes de l’enseignant.</li>
+            <li>Retour au calme, étirements légers, hydratation.</li>
+          </ul>
+          <h3>Conduites à tenir</h3>
+          <ul>
+            <li><b>Chute / entorse :</b> protéger, glacer, surélever, évaluer la douleur. Alerter si gonflement anormal.</li>
+            <li><b>Malaise :</b> asseoir/allonger, libérer voies aériennes, surveiller, alerter si non amélioration.</li>
+            <li><b>Traumatisme grave :</b> ne pas mobiliser, sécuriser la zone, alerter immédiatement (112/15/18).</li>
+          </ul>
+          <p class="muted">Ce rappel ne remplace pas les protocoles de l’établissement.</p>
+        </div></section>
+      </div>
+    </div>
   </main>
   <footer>ChronoMinuteur - Equipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
 </div>

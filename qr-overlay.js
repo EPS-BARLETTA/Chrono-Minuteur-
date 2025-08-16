@@ -46,9 +46,7 @@
       document.getElementById('qr-ov-close').onclick=()=>wrap.remove();
       document.querySelector('#qr-full .close').onclick=()=>{document.getElementById('qr-full').style.display='none';};
       document.getElementById('qr-ov-regen').onclick=()=>render(payload);
-      document.getElementById('qr-ov-full').onclick=()=>{
-        renderFull(payload); document.getElementById('qr-full').style.display='grid';
-      };
+      document.getElementById('qr-ov-full').onclick=()=>{ renderFull(payload); document.getElementById('qr-full').style.display='grid'; };
       document.getElementById('qr-ov-dl').onclick=()=>downloadPNG('qr-ov-slot', filenameBase);
       document.getElementById('qr-full-dl').onclick=()=>downloadPNG('qr-full-slot', filenameBase);
     }
@@ -59,7 +57,7 @@
     }
     function renderFull(pl){
       const slot = document.getElementById('qr-full-slot'); slot.innerHTML='';
-      new QRCode(slot,{text:pl,width:480,height:480,colorDark:"#000",colorLight:"#fff",correctLevel:QRCode.CorrectLevel.H});
+      new QRCode(slot,{text:pl,width:520,height:520,colorDark:"#000",colorLight:"#fff",correctLevel:QRCode.CorrectLevel.H});
     }
     function downloadPNG(containerId, base){
       const el=document.getElementById(containerId);

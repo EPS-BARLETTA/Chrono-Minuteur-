@@ -16,18 +16,19 @@
   .btn{padding:12px 16px;border:0;border-radius:12px;font-weight:800;cursor:pointer}
   .btn-acc{background:#4f46e5;color:#fff}.btn-ok{background:#10b981;color:#083d31}
   .btn-dgr{background:#ef4444;color:#2b0a0a}.btn-warn{background:#f59e0b;color:#1f1400}
-  .svg{width:min(80vw,360px);height:min(80vw,360px)}
-  .time{position:absolute;inset:0;display:grid;place-items:center;font-size:min(12vw,80px);font-weight:900}
+  .svg{width:clamp(260px,70vmin,560px);height:clamp(260px,70vmin,560px)}
+  .time{position:absolute;inset:0;display:grid;place-items:center;font-size:clamp(42px,14vmin,120px);font-weight:900}
   .circle-wrap{position:relative}
-  input{padding:12px;border-radius:12px;border:1px solid #334155;background:#0b1222;color:#e5e7eb}
+  input{padding:12px;border-radius:12px;border:1px solid #334155;background:#0b1222;color:#e5e7eb;width:110px;text-align:center}
+  .inputs{display:flex;gap:10px;align-items:center;justify-content:center}
 </style>
 <div class="wrap">
   <header><a class="back" href="./modes.html">← Modes</a></header>
   <main class="main">
     <div class="panel">
-      <div>
-        <label>Durée (minutes)</label>
-        <input id="mins" type="number" min="1" step="1" value="6">
+      <div class="inputs">
+        <div><label>Minutes</label><br><input id="mins" type="number" min="0" step="1" value="6"></div>
+        <div><label>Secondes</label><br><input id="secs" type="number" min="0" max="59" step="1" value="0"></div>
       </div>
       <div class="circle-wrap">
         <svg class="svg" viewBox="0 0 100 100">
@@ -52,10 +53,11 @@
   const C=2*Math.PI*45;
   let dur=6*60, remain=dur, run=false, t0=0, raf=null;
   function fmt(s){ s=Math.max(0,Math.round(s)); const m=Math.floor(s/60), ss=s%60; return m+':'+String(ss).padStart(2,'0'); }
-  function setDur(){ dur=Math.max(1,Number($('#mins').value))*60; if(!run){ remain=dur; draw(); } }
+  function computeDur(){ const m=Math.max(0,Number($('#mins').value)); const sec=Math.max(0,Math.min(59,Number($('#secs').value))); return m*60+sec; }
+  function setDur(){ dur=Math.max(1,computeDur()); if(!run){ remain=dur; draw(); } }
   function draw(){ $('#time').textContent=fmt(remain); const p=remain/dur; $('#prog').setAttribute('stroke-dashoffset', String(C*(1-p))); }
   function tick(){ if(!run) return; const now=Date.now(); remain = dur - (now - t0)/1000; if(remain<=0){ remain=0; run=false; cancelAnimationFrame(raf); alert('Terminé'); $('#b-start').disabled=false; $('#b-pause').disabled=true; $('#b-reset').disabled=false; } draw(); if(run) raf=requestAnimationFrame(tick); }
-  $('#mins').oninput=setDur; setDur();
+  $('#mins').oninput=setDur; $('#secs').oninput=setDur; setDur();
   $('#b-start').onclick=()=>{ if(run) return; run=true; t0=Date.now()-(dur-remain)*1000; $('#b-start').disabled=true; $('#b-pause').disabled=false; $('#b-reset').disabled=true; tick(); };
   $('#b-pause').onclick=()=>{ run=false; $('#b-start').disabled=false; $('#b-pause').disabled=true; $('#b-reset').disabled=false; };
   $('#b-reset').onclick=()=>{ run=false; remain=dur; draw(); $('#b-start').disabled=false; $('#b-pause').disabled=true; $('#b-reset').disabled=true; };

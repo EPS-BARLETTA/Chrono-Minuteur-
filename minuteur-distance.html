@@ -13,7 +13,7 @@
   footer{background:#e5e7eb;color:#111827;text-align:center;font-weight:700}
   .back{color:#a3aed5;text-decoration:none}
   .main{display:grid;place-items:center;padding:18px}
-  .card{background:#111827;border:1px solid #1f2937;border-radius:16px;padding:18px;max-width:980px;width:94vw;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  .card{background:#111827;border:1px solid #1f2937;border-radius:18px;padding:18px;max-width:1000px;width:94vw;box-shadow:0 10px 30px rgba(0,0,0,.35)}
   .grid{display:grid;gap:12px} @media(min-width:880px){.cols-4{grid-template-columns:repeat(4,1fr)}}
   label{display:block;font-weight:700;margin:8px 0 6px}
   input,select{width:100%;padding:12px;border-radius:12px;border:1px solid #334155;background:#0b1222;color:#e5e7eb}
@@ -21,11 +21,17 @@
   .btn{padding:12px 16px;border:0;border-radius:12px;font-weight:800;cursor:pointer}
   .btn-acc{background:#4f46e5;color:#fff}.btn-ok{background:#10b981;color:#083d31}
   .btn-warn{background:#f59e0b;color:#1f1400}.btn-dgr{background:#ef4444;color:#2b0a0a}
-  .big{font-size:min(12vw,100px);font-weight:900;text-align:center;margin:10px 0}
+  .big{font-size:clamp(48px,14vmin,160px);font-weight:900;text-align:center;margin:10px 0}
   .muted{color:#94a3b8}
   .stat{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
   .box{background:#0b1222;border:1px solid #23304a;border-radius:12px;padding:10px;text-align:center}
   .box b{font-size:1.2rem}
+  .fraction-panel{display:none;gap:10px;justify-content:center;margin-top:10px}
+  .chip{border:0;border-radius:999px;padding:10px 14px;font-weight:900;cursor:pointer}
+  .chip-0{background:#334155;color:#dbeafe}
+  .chip-25{background:#1e293b;color:#86efac}
+  .chip-50{background:#1e293b;color:#fef08a}
+  .chip-75{background:#1e293b;color:#fca5a5}
 </style>
 <div class="wrap">
   <header><a class="back" href="./modes.html">← Modes</a></header>
@@ -56,11 +62,16 @@
         <div class="box"><div class="muted">Vitesse moyenne</div><b id="v-kmh">0.00 km/h</b></div>
         <div class="box"><div class="muted">VMA estimée (≥6’)</div><b id="vma">—</b></div>
       </div>
+      <div id="fraction" class="fraction-panel">
+        <button class="chip chip-0" data-f="0">+ 0</button>
+        <button class="chip chip-25" data-f="0.25">+ 1/4</button>
+        <button class="chip chip-50" data-f="0.5">+ 1/2</button>
+        <button class="chip chip-75" data-f="0.75">+ 3/4</button>
+      </div>
       <div class="row" style="margin-top:12px">
-        <button id="b-fraction" class="btn btn-acc" disabled>+ 1/4 — 1/2 — 3/4 tour</button>
         <button id="b-qr" class="btn btn-acc" disabled>QR ScanProf</button>
       </div>
-      <p class="muted" style="margin-top:6px">À la fin : ajoute une fraction si besoin, ça recalcule distance & vitesse (et VMA si durée ≥ 6 min).</p>
+      <p class="muted" style="margin-top:6px">Fin de minuteur : cliquez sur la fraction de tour, puis générez le QR.</p>
     </div>
   </main>
   <footer>ChronoMinuteur - Equipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
@@ -68,10 +79,10 @@
 <script>
   const $=s=>document.querySelector(s);
   let dur=6*60, remain=dur, run=false, t0=0, raf=null;
-  let laps=0, lapm=120, dist=0;
+  let laps=0, lapm=120, dist=0, fraction=0;
   function fmt(s){ s=Math.max(0,Math.round(s)); const m=Math.floor(s/60), ss=s%60; return m+':'+String(ss).padStart(2,'0'); }
   function kmh(m, s){ return (m>0 && s>0) ? (m/s)*3.6 : 0; }
-  function draw(){ $('#time').textContent=fmt(remain); $('#laps').value=String(laps); $('#dist').value=String(dist);
+  function draw(){ $('#time').textContent=fmt(remain); $('#laps').value=String(laps); $('#dist').value=String(Math.round(dist));
     const v=kmh(dist, dur-remain); $('#v-kmh').textContent = v.toFixed(2)+' km/h';
     if(dur>=360){ $('#vma').textContent = v.toFixed(2)+' km/h'; } else { $('#vma').textContent='—'; }
   }
@@ -80,31 +91,34 @@
 
   function tick(){ if(!run) return; const now=Date.now(); remain = dur - (now - t0)/1000;
     if(remain<=0){ remain=0; run=false; cancelAnimationFrame(raf);
-      $('#b-start').disabled=false; $('#b-pause').disabled=true; $('#b-reset').disabled=false; $('#b-lap').disabled=true; $('#b-fraction').disabled=false; $('#b-qr').disabled=false;
-      alert('Terminé — ajoute une fraction si besoin.');
+      $('#b-start').disabled=false; $('#b-pause').disabled=true; $('#b-reset').disabled=false; $('#b-lap').disabled=true;
+      $('#fraction').style.display='flex'; $('#b-qr').disabled=false;
     }
     draw(); if(run) raf=requestAnimationFrame(tick);
   }
 
   $('#b-start').onclick=()=>{ if(run) return; run=true; t0=Date.now()-(dur-remain)*1000;
-    $('#b-start').disabled=true; $('#b-pause').disabled=false; $('#b-reset').disabled=true; $('#b-lap').disabled=false; $('#b-fraction').disabled=true; $('#b-qr').disabled=true; tick();
+    $('#b-start').disabled=true; $('#b-pause').disabled=false; $('#b-reset').disabled=true; $('#b-lap').disabled=false; $('#fraction').style.display='none'; $('#b-qr').disabled=true; fraction=0; dist=laps*lapm; draw(); tick();
   };
   $('#b-pause').onclick=()=>{ run=false; $('#b-start').disabled=false; $('#b-pause').disabled=true; $('#b-reset').disabled=false; };
-  $('#b-reset').onclick=()=>{ run=false; remain=dur; laps=0; dist=0; draw(); $('#b-start').disabled=false; $('#b-pause').disabled=true; $('#b-reset').disabled=true; $('#b-lap').disabled=true; $('#b-fraction').disabled=true; $('#b-qr').disabled=true; };
+  $('#b-reset').onclick=()=>{ run=false; remain=dur; laps=0; dist=0; fraction=0; draw(); $('#b-start').disabled=false; $('#b-pause').disabled=true; $('#b-reset').disabled=true; $('#b-lap').disabled=true; $('#fraction').style.display='none'; $('#b-qr').disabled=true; };
   $('#b-lap').onclick=()=>{ if(!run) return; laps+=1; dist = laps*lapm; draw(); };
   $('#b-full').onclick=()=>{ if(!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); };
 
-  $('#b-fraction').onclick=()=>{
-    const choice = prompt('Ajouter une fraction de tour ? (entrer 0.25, 0.5, 0.75 ou 0)');
-    const f = Number(choice||0);
-    if([0,0.25,0.5,0.75].includes(f)){ dist = laps*lapm + f*lapm; draw(); } else { alert('Valeur invalide (0, 0.25, 0.5, 0.75)'); }
-  };
+  document.querySelectorAll('.chip').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const f = Number(btn.dataset.f||0);
+      fraction = f;
+      dist = laps*lapm + fraction*lapm;
+      draw();
+    });
+  });
 
   $('#b-qr').onclick=()=>{
     const nom=$('#nom').value.trim(), prenom=$('#prenom').value.trim(), classe=$('#classe').value.trim();
     let sexe=$('#sexe').value; sexe=(sexe==='M'||sexe==='F')?sexe:'F';
     if(!nom||!prenom||!classe){ alert('Identité incomplète.'); return; }
-    const elapsed = dur-remain;
+    const elapsed = dur - remain;
     const v = kmh(dist, elapsed);
     const payload = {
       nom, prenom, classe, sexe,
@@ -112,6 +126,7 @@
       Duree_s: Math.round(dur),
       Piste_m: lapm,
       Tours: laps,
+      Fraction: fraction,
       Distance_m: Math.round(dist),
       Vitesse_kmh: Number(v.toFixed(2)),
       VMA: (dur>=360) ? Number(v.toFixed(2)) : undefined
