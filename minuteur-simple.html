@@ -6,6 +6,7 @@
 </head>
 <body style="margin:0;background:#0b1222;color:#e5e7eb;font:16px/1.4 system-ui">
 <style>
+  :root{--gA:#f59e0b;--gB:#f97316}
   .wrap{min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto}
   header,footer{padding:10px 12px}
   footer{background:#e5e7eb;color:#111827;text-align:center;font-weight:700}
@@ -13,23 +14,28 @@
   .main{display:grid;place-items:center;padding:18px}
   .panel{display:grid;gap:16px;justify-items:center}
   .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-  .btn{padding:12px 16px;border:0;border-radius:12px;font-weight:800;cursor:pointer}
+  .btn{padding:12px 16px;border:0;border-radius:12px;font-weight:800;cursor:pointer;min-width:160px}
   .btn-acc{background:#4f46e5;color:#fff}.btn-ok{background:#10b981;color:#083d31}
   .btn-dgr{background:#ef4444;color:#2b0a0a}.btn-warn{background:#f59e0b;color:#1f1400}
   .svg{width:clamp(260px,72vmin,620px);height:clamp(260px,72vmin,620px)}
-  .time{position:absolute;inset:0;display:grid;place-items:center;font-size:clamp(42px,16vmin,140px);font-weight:900}
+  .time{position:absolute;inset:0;display:grid;place-items:center;font-size:clamp(42px,16vmin,140px);font-weight:900;text-align:center}
   .circle-wrap{position:relative}
-  input{padding:12px;border-radius:12px;border:1px solid #334155;background:#0b1222;color:#e5e7eb;width:110px;text-align:center}
-  .inputs{display:flex;gap:10px;align-items:center;justify-content:center}
-  body.fs header, body.fs footer{display:none}
+  .inputs{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap}
+  .fg{padding:2px;border-radius:14px;background:linear-gradient(135deg,var(--gA),var(--gB))}
+  .fg .inner{background:#0b1222;border-radius:12px;padding:10px;border:1px solid #1f2a43}
+  .fg input{padding:12px;border-radius:12px;border:1px solid #334155;background:#0b1222;color:#e5e7eb;width:110px;text-align:center}
+  body.fs header, body.fs footer, body.fs .inputs{display:none}
+  body.fs .btn{padding:24px 28px;font-size:clamp(18px,3.2vw,26px);border-radius:18px}
+  #cd{position:fixed;inset:0;display:none;place-items:center;background:rgba(0,0,0,.6);z-index:9999}
+  #cd .num{font-weight:900;font-size:clamp(96px,30vmin,360px)}
 </style>
 <div class="wrap">
   <header><a class="back" href="./modes.html">← Modes</a></header>
   <main class="main">
     <div class="panel">
       <div class="inputs">
-        <div><label>Minutes</label><br><input id="mins" type="number" min="0" step="1" value="6"></div>
-        <div><label>Secondes</label><br><input id="secs" type="number" min="0" max="59" step="1" value="0"></div>
+        <div class="fg"><div class="inner"><label>Minutes</label><br><input id="mins" type="number" min="0" step="1" value="6" inputmode="numeric"></div></div>
+        <div class="fg"><div class="inner"><label>Secondes</label><br><input id="secs" type="number" min="0" max="59" step="1" value="0" inputmode="numeric"></div></div>
       </div>
       <div class="circle-wrap">
         <svg class="svg" viewBox="0 0 100 100">
@@ -49,19 +55,48 @@
   </main>
   <footer>ChronoMinuteur - Equipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
 </div>
+<div id="cd"><div class="num" id="cdnum">3</div></div>
+
+<script>
+  let __AC__ = null;
+  function audioCtx(){
+    if(!__AC__){
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      __AC__ = new Ctx();
+    }
+    if(__AC__.state === 'suspended') __AC__.resume();
+    return __AC__;
+  }
+  function beep(freq=880, duration=0.18, volume=0.2){
+    const ac = audioCtx();
+    const o = ac.createOscillator();
+    const g = ac.createGain();
+    o.type = 'sine'; o.frequency.value = freq;
+    g.gain.setValueAtTime(volume, ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + duration);
+    o.connect(g).connect(ac.destination);
+    o.start(); o.stop(ac.currentTime + duration);
+  }
+  function patternStart(){ beep(880,0.18,0.25); }
+  function patternEnd(){ beep(440,0.25,0.25); setTimeout(()=>beep(440,0.25,0.25), 120); }
+</script>
+
 <script>
   const $=s=>document.querySelector(s);
   const C=2*Math.PI*45;
-  let dur=6*60, remain=dur, run=false, t0=0, raf=null;
+  let dur=6*60, remain=dur, run=false, t0=0, raf=null, startedOnce=false, counting=false;
   function fmt(s){ s=Math.max(0,Math.round(s)); const m=Math.floor(s/60), ss=s%60; return m+':'+String(ss).padStart(2,'0'); }
   function computeDur(){ const m=Math.max(0,Number($('#mins').value)); const sec=Math.max(0,Math.min(59,Number($('#secs').value))); return m*60+sec; }
   function setDur(){ dur=Math.max(1,computeDur()); if(!run){ remain=dur; draw(); } }
   function draw(){ $('#time').textContent=fmt(remain); const p=remain/dur; $('#prog').setAttribute('stroke-dashoffset', String(C*(1-p))); }
-  function tick(){ if(!run) return; const now=Date.now(); remain = dur - (now - t0)/1000; if(remain<=0){ remain=0; run=false; cancelAnimationFrame(raf); alert('Terminé'); $('#b-start').disabled=false; $('#b-pause').disabled=true; $('#b-reset').disabled=false; } draw(); if(run) raf=requestAnimationFrame(tick); }
+  function tick(){ if(!run) return; const now=Date.now(); remain = dur - (now - t0)/1000; if(remain<=0){ remain=0; run=false; cancelAnimationFrame(raf); patternEnd(); alert('Terminé'); $('#b-start').disabled=false; $('#b-pause').disabled=true; $('#b-reset').disabled=false; } draw(); if(run) raf=requestAnimationFrame(tick); }
   $('#mins').oninput=setDur; $('#secs').oninput=setDur; setDur();
-  $('#b-start').onclick=()=>{ if(run) return; run=true; t0=Date.now()-(dur-remain)*1000; $('#b-start').disabled=true; $('#b-pause').disabled=false; $('#b-reset').disabled=true; tick(); };
+  function doCountdown(cb){ if(counting) return; counting=true; const cd=$('#cd'), num=$('#cdnum'); let n=3; cd.style.display='grid'; num.textContent=n; beep(600,0.18,0.3);
+    const iv=setInterval(()=>{ n--; if(n>0){ num.textContent=n; beep(600,0.18,0.3); } else { clearInterval(iv); cd.style.display='none'; counting=false; patternStart(); cb && cb(); } }, 1000);
+  }
+  $('#b-start').onclick=()=>{ if(run||counting) return; if(!startedOnce){ doCountdown(()=>{ startedOnce=true; run=true; t0=Date.now()-(dur-remain)*1000; $('#b-start').disabled=true; $('#b-pause').disabled=false; $('#b-reset').disabled=true; tick(); }); } else { run=true; t0=Date.now()-(dur-remain)*1000; $('#b-start').disabled=true; $('#b-pause').disabled=false; $('#b-reset').disabled=true; tick(); } };
   $('#b-pause').onclick=()=>{ run=false; $('#b-start').disabled=false; $('#b-pause').disabled=true; $('#b-reset').disabled=false; };
-  $('#b-reset').onclick=()=>{ run=false; remain=dur; draw(); $('#b-start').disabled=false; $('#b-pause').disabled=true; $('#b-reset').disabled=true; };
+  $('#b-reset').onclick=()=>{ run=false; remain=dur; startedOnce=false; draw(); $('#b-start').disabled=false; $('#b-pause').disabled=true; $('#b-reset').disabled=true; };
   function toggleFS(){ if(!document.fullscreenElement){ document.documentElement.requestFullscreen(); } else { document.exitFullscreen(); } }
   $('#b-full').onclick=toggleFS;
   document.addEventListener('fullscreenchange', ()=>{ document.body.classList.toggle('fs', !!document.fullscreenElement); });

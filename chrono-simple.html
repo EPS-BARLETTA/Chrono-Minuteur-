@@ -11,15 +11,16 @@
   footer{background:#e5e7eb;color:#111827;text-align:center;font-weight:700}
   .main{display:grid;place-items:center;padding:18px}
   .panel{display:grid;gap:18px;justify-items:center}
-  .time{font-size:clamp(90px,28vmin,340px);font-weight:900;letter-spacing:1px}
+  .time{font-size:clamp(90px,28vmin,340px);font-weight:900;letter-spacing:1px;text-align:center}
   .row{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
-  .btn{padding:18px 22px;border:0;border-radius:16px;font-weight:900;cursor:pointer;font-size:clamp(16px,2.8vw,22px)}
+  .btn{padding:18px 22px;border:0;border-radius:16px;font-weight:900;cursor:pointer;font-size:clamp(16px,2.8vw,22px);min-width:180px}
   .btn:focus{outline:none;box-shadow:0 0 0 4px var(--ring)}
   .btn-acc{background:#4f46e5;color:#fff}.btn-ok{background:#10b981;color:#083d31}
   .btn-warn{background:#f59e0b;color:#1f1400}.btn-dgr{background:#ef4444;color:#2b0a0a}
   .back{color:#a3aed5;text-decoration:none}
   body.fs header, body.fs footer{display:none}
   body.fs .time{font-size:clamp(120px,34vmin,420px)}
+  body.fs .btn{padding:24px 28px;font-size:clamp(18px,3.2vw,26px);border-radius:18px}
 </style>
 </head>
 <body>
@@ -38,13 +39,38 @@
   </main>
   <footer>ChronoMinuteur - Equipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
 </div>
+
+<script>
+  let __AC__ = null;
+  function audioCtx(){
+    if(!__AC__){
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      __AC__ = new Ctx();
+    }
+    if(__AC__.state === 'suspended') __AC__.resume();
+    return __AC__;
+  }
+  function beep(freq=880, duration=0.18, volume=0.2){
+    const ac = audioCtx();
+    const o = ac.createOscillator();
+    const g = ac.createGain();
+    o.type = 'sine'; o.frequency.value = freq;
+    g.gain.setValueAtTime(volume, ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + duration);
+    o.connect(g).connect(ac.destination);
+    o.start(); o.stop(ac.currentTime + duration);
+  }
+  function patternStart(){ beep(880,0.18,0.25); }
+  function patternEnd(){ beep(440,0.25,0.25); setTimeout(()=>beep(440,0.25,0.25), 120); }
+</script>
+
 <script>
   const $=s=>document.querySelector(s);
   let run=false, t0=0, raf=null, acc=0;
   const fmt=t=>{const ms=Math.floor((t%1000)/100); const s=Math.floor(t/1000)%60; const m=Math.floor(t/60000); return m+':'+String(s).padStart(2,'0')+'.'+ms};
   function tick(){ if(!run) return; const t=Date.now()-t0+acc; $('#time').textContent=fmt(t); raf=requestAnimationFrame(tick); }
-  $('#b-start').onclick=()=>{ if(run) return; run=true; t0=Date.now(); tick(); $('#b-start').disabled=true; $('#b-stop').disabled=false; $('#b-reset').disabled=true; };
-  $('#b-stop').onclick=()=>{ if(!run) return; run=false; acc += Date.now()-t0; cancelAnimationFrame(raf); $('#b-start').disabled=false; $('#b-stop').disabled=true; $('#b-reset').disabled=false; };
+  $('#b-start').onclick=()=>{ if(run) return; run=true; t0=Date.now(); patternStart(); tick(); $('#b-start').disabled=true; $('#b-stop').disabled=false; $('#b-reset').disabled=true; };
+  $('#b-stop').onclick=()=>{ if(!run) return; run=false; acc += Date.now()-t0; cancelAnimationFrame(raf); patternEnd(); $('#b-start').disabled=false; $('#b-stop').disabled=true; $('#b-reset').disabled=false; };
   $('#b-reset').onclick=()=>{ run=false; acc=0; $('#time').textContent='0:00.0'; $('#b-reset').disabled=true; $('#b-start').disabled=false; $('#b-stop').disabled=true; };
   function toggleFS(){ if(!document.fullscreenElement){ document.documentElement.requestFullscreen(); } else { document.exitFullscreen(); } }
   $('#b-full').onclick=toggleFS;
