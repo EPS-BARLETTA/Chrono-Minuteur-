@@ -14,14 +14,14 @@
   .back{color:#a3aed5;text-decoration:none}
   .main{display:grid;place-items:center;padding:18px}
   .card{background:#111827;border:1px solid #1f2937;border-radius:18px;padding:18px;max-width:1000px;width:94vw;box-shadow:0 10px 30px rgba(0,0,0,.35)}
-  .grid{display:grid;gap:12px} @media(min-width:880px){.cols-4{grid-template-columns:repeat(4,1fr)}}
+  .grid{display:grid;gap:12px} @media(min-width:920px){.cols-5{grid-template-columns:repeat(5,1fr)}}
   label{display:block;font-weight:700;margin:8px 0 6px}
   input,select{width:100%;padding:12px;border-radius:12px;border:1px solid #334155;background:#0b1222;color:#e5e7eb}
-  .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+  .row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
   .btn{padding:12px 16px;border:0;border-radius:12px;font-weight:800;cursor:pointer}
   .btn-acc{background:#4f46e5;color:#fff}.btn-ok{background:#10b981;color:#083d31}
   .btn-warn{background:#f59e0b;color:#1f1400}.btn-dgr{background:#ef4444;color:#2b0a0a}
-  .big{font-size:clamp(48px,14vmin,160px);font-weight:900;text-align:center;margin:10px 0}
+  .big{font-size:clamp(56px,20vmin,240px);font-weight:900;text-align:center;margin:10px 0}
   .muted{color:#94a3b8}
   .stat{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
   .box{background:#0b1222;border:1px solid #23304a;border-radius:12px;padding:10px;text-align:center}
@@ -32,23 +32,29 @@
   .chip-25{background:#1e293b;color:#86efac}
   .chip-50{background:#1e293b;color:#fef08a}
   .chip-75{background:#1e293b;color:#fca5a5}
+  body.fs header, body.fs footer, body.fs .form{display:none}
+  body.fs .big{font-size:clamp(72px,26vmin,300px)}
 </style>
 <div class="wrap">
   <header><a class="back" href="./modes.html">← Modes</a></header>
   <main class="main">
     <div class="card">
       <h2 style="margin:6px 0 10px">Minuteur avec distance & vitesse</h2>
-      <div class="grid cols-4">
-        <div><label>Nom</label><input id="nom" placeholder="Martin"></div>
-        <div><label>Prénom</label><input id="prenom" placeholder="Julie"></div>
-        <div><label>Classe</label><input id="classe" placeholder="4C"></div>
-        <div><label>Sexe</label><select id="sexe"><option value="F">F</option><option value="M">M</option></select></div>
-      </div>
-      <div class="grid cols-4" style="margin-top:10px">
-        <div><label>Durée (minutes)</label><input id="mins" type="number" min="1" step="1" value="6"></div>
-        <div><label>Longueur de piste (m)</label><input id="lapm" type="number" min="25" step="5" value="120"></div>
-        <div><label>Tours comptés</label><input id="laps" type="number" value="0" disabled></div>
-        <div><label>Distance totale (m)</label><input id="dist" type="number" value="0" disabled></div>
+      <div class="form">
+        <div class="grid cols-5">
+          <div><label>Nom</label><input id="nom" placeholder="Martin"></div>
+          <div><label>Prénom</label><input id="prenom" placeholder="Julie"></div>
+          <div><label>Classe</label><input id="classe" placeholder="4C"></div>
+          <div><label>Sexe</label><select id="sexe"><option value="F">F</option><option value="M">M</option></select></div>
+          <div><label>Piste (m)</label><input id="lapm" type="number" min="25" step="5" value="120"></div>
+        </div>
+        <div class="grid cols-5" style="margin-top:10px">
+          <div><label>Minutes</label><input id="mins" type="number" min="0" step="1" value="6"></div>
+          <div><label>Secondes</label><input id="secs" type="number" min="0" max="59" step="1" value="0"></div>
+          <div><label>Tours comptés</label><input id="laps" type="number" value="0" disabled></div>
+          <div><label>Distance totale (m)</label><input id="dist" type="number" value="0" disabled></div>
+          <div><label>Fraction</label><input id="frac" type="text" value="0" disabled></div>
+        </div>
       </div>
       <div id="time" class="big">6:00</div>
       <div class="row">
@@ -82,12 +88,21 @@
   let laps=0, lapm=120, dist=0, fraction=0;
   function fmt(s){ s=Math.max(0,Math.round(s)); const m=Math.floor(s/60), ss=s%60; return m+':'+String(ss).padStart(2,'0'); }
   function kmh(m, s){ return (m>0 && s>0) ? (m/s)*3.6 : 0; }
-  function draw(){ $('#time').textContent=fmt(remain); $('#laps').value=String(laps); $('#dist').value=String(Math.round(dist));
+  function computeDur(){ const m=Math.max(0,Number($('#mins').value)); const sec=Math.max(0,Math.min(59,Number($('#secs').value))); return m*60+sec; }
+  function draw(){
+    $('#time').textContent=fmt(remain);
+    $('#laps').value=String(laps);
+    $('#dist').value=String(Math.round(dist));
+    $('#frac').value=String(fraction);
     const v=kmh(dist, dur-remain); $('#v-kmh').textContent = v.toFixed(2)+' km/h';
     if(dur>=360){ $('#vma').textContent = v.toFixed(2)+' km/h'; } else { $('#vma').textContent='—'; }
   }
-  function setInputs(){ dur=Math.max(1,Number($('#mins').value))*60; lapm=Math.max(1,Number($('#lapm').value)); if(!run){ remain=dur; draw(); } }
-  $('#mins').oninput=setInputs; $('#lapm').oninput=setInputs; setInputs();
+  function setInputs(){
+    dur=Math.max(1,computeDur());
+    lapm=Math.max(1,Number($('#lapm').value));
+    if(!run){ remain=dur; draw(); }
+  }
+  $('#mins').oninput=setInputs; $('#secs').oninput=setInputs; $('#lapm').oninput=setInputs; setInputs();
 
   function tick(){ if(!run) return; const now=Date.now(); remain = dur - (now - t0)/1000;
     if(remain<=0){ remain=0; run=false; cancelAnimationFrame(raf);
@@ -103,7 +118,9 @@
   $('#b-pause').onclick=()=>{ run=false; $('#b-start').disabled=false; $('#b-pause').disabled=true; $('#b-reset').disabled=false; };
   $('#b-reset').onclick=()=>{ run=false; remain=dur; laps=0; dist=0; fraction=0; draw(); $('#b-start').disabled=false; $('#b-pause').disabled=true; $('#b-reset').disabled=true; $('#b-lap').disabled=true; $('#fraction').style.display='none'; $('#b-qr').disabled=true; };
   $('#b-lap').onclick=()=>{ if(!run) return; laps+=1; dist = laps*lapm; draw(); };
-  $('#b-full').onclick=()=>{ if(!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); };
+  function toggleFS(){ if(!document.fullscreenElement){ document.documentElement.requestFullscreen(); } else { document.exitFullscreen(); } }
+  $('#b-full').onclick=toggleFS;
+  document.addEventListener('fullscreenchange', ()=>{ document.body.classList.toggle('fs', !!document.fullscreenElement); });
 
   document.querySelectorAll('.chip').forEach(btn=>{
     btn.addEventListener('click', ()=>{
