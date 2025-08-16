@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chrono-Minuteur — Accueil</title>
+<style>
+  :root{--bg:#0f172a;--panel:#111827;--text:#e5e7eb;--muted:#94a3b8;--accent:#4f46e5;--ok:#10b981;--ring:rgba(79,70,229,.35)}
+  *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 system-ui,Segoe UI,Roboto}
+  .wrap{min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto}
+  .main{display:grid;place-items:center;padding:24px}
+  .card{background:var(--panel);border:1px solid #1f2937;border-radius:16px;padding:24px;max-width:720px;width:92vw;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  h1{margin:6px 0 18px;font-size:1.8rem;text-align:center}
+  .grid{display:grid;gap:12px}
+  .btn{display:block;width:100%;padding:16px;border:0;border-radius:12px;font-weight:800;cursor:pointer}
+  .btn:focus{outline:none;box-shadow:0 0 0 4px var(--ring)}
+  .btn-accent{background:var(--accent);color:#fff}
+  .btn-ghost{background:transparent;border:1px dashed #334155;color:var(--muted)}
+  footer{background:#e5e7eb;color:#111827;padding:10px 12px;text-align:center;font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header></header>
+  <main class="main">
+    <div class="card">
+      <h1>Chrono-Minuteur</h1>
+      <div class="grid">
+        <a href="./modes.html"><button class="btn btn-accent">Démarrer</button></a>
+        <a href="./aide.html"><button class="btn btn-ghost">Aide</button></a>
+        <a href="./securite.html"><button class="btn btn-ghost">Fiche de sécurité</button></a>
+      </div>
+    </div>
+  </main>
+  <footer>ChronoMinuteur - Equipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
+</div>
+</body>
+</html>

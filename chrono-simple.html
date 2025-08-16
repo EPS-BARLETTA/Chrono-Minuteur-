@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chrono simple — Plein écran</title>
+<style>
+  :root{--bg:#0b1222;--text:#e5e7eb;--accent:#4f46e5;--ok:#10b981;--warn:#f59e0b;--danger:#ef4444;--ring:rgba(79,70,229,.35)}
+  *{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:16px/1.4 system-ui}
+  .wrap{min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto}
+  header,footer{padding:10px 12px}
+  footer{background:#e5e7eb;color:#111827;text-align:center;font-weight:700}
+  .main{display:grid;place-items:center;padding:18px}
+  .panel{display:grid;gap:14px;justify-items:center}
+  .time{font-size:min(14vw,120px);font-weight:900;letter-spacing:1px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+  .btn{padding:14px 18px;border:0;border-radius:14px;font-weight:800;cursor:pointer}
+  .btn:focus{outline:none;box-shadow:0 0 0 4px var(--ring)}
+  .btn-acc{background:var(--accent);color:#fff}.btn-ok{background:var(--ok);color:#083d31}
+  .btn-warn{background:var(--warn);color:#1f1400}.btn-dgr{background:var(--danger);color:#2b0a0a}
+  .back{color:#a3aed5;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><a class="back" href="./modes.html">← Modes</a></header>
+  <main class="main">
+    <div class="panel">
+      <div id="time" class="time">0:00.0</div>
+      <div class="row">
+        <button id="b-start" class="btn btn-acc">Démarrer</button>
+        <button id="b-stop" class="btn btn-warn" disabled>Stop</button>
+        <button id="b-reset" class="btn btn-dgr" disabled>Réinitialiser</button>
+        <button id="b-full" class="btn btn-ok">Plein écran</button>
+      </div>
+    </div>
+  </main>
+  <footer>ChronoMinuteur - Equipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
+</div>
+<script>
+  const $=s=>document.querySelector(s);
+  let run=false, t0=0, raf=null, acc=0;
+  const fmt=t=>{const ms=Math.floor((t%1000)/100); const s=Math.floor(t/1000)%60; const m=Math.floor(t/60000); return m+':'+String(s).padStart(2,'0')+'.'+ms};
+  function tick(){ if(!run) return; const t=Date.now()-t0+acc; $('#time').textContent=fmt(t); raf=requestAnimationFrame(tick); }
+  $('#b-start').onclick=()=>{ if(run) return; run=true; t0=Date.now(); tick(); $('#b-start').disabled=true; $('#b-stop').disabled=false; $('#b-reset').disabled=true; };
+  $('#b-stop').onclick=()=>{ if(!run) return; run=false; acc += Date.now()-t0; cancelAnimationFrame(raf); $('#b-start').disabled=false; $('#b-stop').disabled=true; $('#b-reset').disabled=false; };
+  $('#b-reset').onclick=()=>{ run=false; acc=0; $('#time').textContent='0:00.0'; $('#b-reset').disabled=true; $('#b-start').disabled=false; $('#b-stop').disabled=true; };
+  $('#b-full').onclick=()=>{ if(!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); };
+</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chrono-Minuteur — Modes</title>
+<style>
+  :root{--bg:#0f172a;--panel:#111827;--text:#e5e7eb;--muted:#94a3b8;--accent:#4f46e5;--ok:#10b981;--warn:#f59e0b;--ring:rgba(79,70,229,.35)}
+  *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 system-ui,Segoe UI,Roboto}
+  .wrap{min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto}
+  .main{padding:24px;display:grid;place-items:center}
+  .card{background:var(--panel);border:1px solid #1f2937;border-radius:16px;padding:24px;max-width:1000px;width:94vw;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  h1{margin:6px 0 18px;text-align:center}
+  .grid{display:grid;gap:14px}
+  @media(min-width:800px){.grid{grid-template-columns:repeat(2,1fr)}}
+  .tile{border:1px solid #23304a;border-radius:14px;padding:16px;display:grid;gap:10px}
+  .tile h2{margin:0;font-size:1.1rem}
+  .btn{padding:12px 16px;border:0;border-radius:12px;font-weight:800;cursor:pointer}
+  .btn:focus{outline:none;box-shadow:0 0 0 4px var(--ring)}
+  .btn-accent{background:var(--accent);color:#fff}
+  .back{margin-bottom:14px;display:inline-block;color:var(--muted);text-decoration:none}
+  footer{background:#e5e7eb;color:#111827;padding:10px 12px;text-align:center;font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header style="padding:12px 16px"><a class="back" href="./index.html">← Accueil</a></header>
+  <main class="main">
+    <div class="card">
+      <h1>Choisir un mode</h1>
+      <div class="grid">
+        <div class="tile">
+          <h2>Chrono simple (plein écran)</h2>
+          <p class="muted">Grand affichage, contrôles Start / Stop / Reset.</p>
+          <a href="./chrono-simple.html"><button class="btn btn-accent">Ouvrir</button></a>
+        </div>
+        <div class="tile">
+          <h2>Chrono avec vitesse</h2>
+          <p class="muted">Paramètre une distance (ex. 100 m). Temps + vitesse à l’arrêt. QR compatible ScanProf.</p>
+          <a href="./chrono-vitesse.html"><button class="btn btn-accent">Ouvrir</button></a>
+        </div>
+        <div class="tile">
+          <h2>Minuteur simple (plein écran)</h2>
+          <p class="muted">Décompte visuel en rond + temps restant au centre.</p>
+          <a href="./minuteur-simple.html"><button class="btn btn-accent">Ouvrir</button></a>
+        </div>
+        <div class="tile">
+          <h2>Minuteur avec distance & vitesse</h2>
+          <p class="muted">Durée + longueur de piste. Ajoute les tours. Distance totale, vitesse, fraction finale, QR & VMA ≥ 6’.</p>
+          <a href="./minuteur-distance.html"><button class="btn btn-accent">Ouvrir</button></a>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer>ChronoMinuteur - Equipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
+</div>
+</body>
+</html>
