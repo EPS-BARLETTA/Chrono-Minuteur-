@@ -4,120 +4,134 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Aide — ChronoMinuteur</title>
 <style>
-  body{margin:0;background:#0f172a;color:#e5e7eb;font:16px/1.5 system-ui}
+  :root{
+    /* Couleurs alignées sur "Choisir un mode" */
+    --c-simple-a:#0b1222;  --c-simple-b:#0c1730;
+    --c-vit-a:#1e293b;     --c-vit-b:#0b3546;
+    --c-min-a:#1f2937;     --c-min-b:#12302c;
+    --c-dist-a:#1f2a43;    --c-dist-b:#0c2c3a;
+
+    --fg:#e5e7eb; --muted:#cbd5e1; --border:#1f2937;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#0f172a;color:var(--fg);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
   header,footer{padding:12px 16px}
   a.back{color:#a3aed5;text-decoration:none}
-  main{max-width:1000px;margin:0 auto;padding:18px;display:grid;gap:16px}
-  .block{border:1px solid #1f2937;border-radius:16px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  main{max-width:1000px;margin:0 auto;padding:18px;display:grid;gap:14px}
   h1{margin:0 0 8px}
-  h2{margin:0 0 6px;font-size:1.2rem}
-  p{margin:0 0 8px;color:#cbd5e1}
-  ul{margin:6px 0 0 22px}
-  li{margin:3px 0}
-  /* Couleurs par mode */
-  .simple{background:linear-gradient(135deg,#0b1222,#0c1730)}
-  .vitesse{background:linear-gradient(135deg,#1e293b,#0b3546)}
-  .minuteur{background:linear-gradient(135deg,#1f2937,#12302c)}
-  .distance{background:linear-gradient(135deg,#1f2a43,#0c2c3a)}
-  /* Cartouches */
-  .tag{display:inline-block;padding:4px 10px;border-radius:999px;font-weight:800;font-size:.85rem;margin-bottom:8px}
-  .tag-s{background:#3b82f6;color:#031226}
-  .tag-v{background:#22c55e;color:#052014}
-  .tag-m{background:#f59e0b;color:#1f1400}
-  .tag-d{background:#06b6d4;color:#06212a}
-  /* Grille aérée */
-  .cols{display:grid;gap:12px}
+  p.lead{margin:0 0 8px;color:var(--muted)}
+  /* Blocs colorés par mode */
+  .block{border:1px solid var(--border);border-radius:16px;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  .simple{background:linear-gradient(135deg,var(--c-simple-a),var(--c-simple-b))}
+  .vitesse{background:linear-gradient(135deg,var(--c-vit-a),var(--c-vit-b))}
+  .minuteur{background:linear-gradient(135deg,var(--c-min-a),var(--c-min-b))}
+  .distance{background:linear-gradient(135deg,var(--c-dist-a),var(--c-dist-b))}
+  .head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 6px}
+  .title{margin:0;font-size:1.1rem}
+  .tag{display:inline-block;padding:4px 10px;border-radius:999px;font-weight:900;font-size:.85rem;border:1px solid rgba(255,255,255,.2)}
+  .cols{display:grid;gap:8px}
   @media(min-width:820px){ .cols{grid-template-columns:1fr 1fr} }
-  .tips{background:#0b1222;border:1px dashed #22314b;border-radius:12px;padding:10px;margin-top:8px;color:#cbd5e1}
+  ul{margin:6px 0 0 18px}
+  li{margin:4px 0}
   footer{background:#e5e7eb;color:#111827;text-align:center;font-weight:700}
 </style>
 </head>
 <body>
   <header><a class="back" href="./index.html">← Accueil</a></header>
   <main>
-    <h1>Aide — modes & bonnes pratiques</h1>
+    <h1>Aide — mode de fonctionnement</h1>
+    <p class="lead">Guide rapide, mode par mode. Les opérations et boutons sont identiques en plein écran (les champs de saisie sont masqués pour la visibilité).</p>
 
+    <!-- Chrono simple -->
     <section class="block simple">
-      <span class="tag tag-s">Chrono simple</span>
+      <div class="head">
+        <h2 class="title">Chrono simple</h2>
+        <span class="tag">Affichage géant</span>
+      </div>
       <div class="cols">
         <div>
-          <h2>But</h2>
-          <p>Afficher un chronomètre **géant** visible de loin (gymnase / stade).</p>
-          <h2>Étapes</h2>
           <ul>
-            <li>Appuyer sur <b>Démarrer</b>, puis <b>Stop</b> pour figer le temps.</li>
-            <li><b>Réinitialiser</b> pour remettre à zéro.</li>
+            <li>Appuyer sur <b>Démarrer</b> pour lancer le chrono.</li>
+            <li><b>Stop</b> fige le temps ; <b>Réinitialiser</b> remet à zéro.</li>
             <li><b>Plein écran</b> pour maximiser la visibilité.</li>
           </ul>
         </div>
         <div>
-          <h2>Astuce EPS</h2>
-          <div class="tips">Place l’iPad au centre de la zone pour que toute la classe voie le temps. Utilise le plein écran.</div>
+          <ul>
+            <li>Affichage au <b>centième</b> si configuré.</li>
+            <li>En plein écran, seules les <b>commandes</b> restent visibles.</li>
+          </ul>
         </div>
       </div>
     </section>
 
+    <!-- Chrono avec vitesse -->
     <section class="block vitesse">
-      <span class="tag tag-v">Chrono avec vitesse</span>
+      <div class="head">
+        <h2 class="title">Chrono avec vitesse</h2>
+        <span class="tag">Sprint / distance fixe</span>
+      </div>
       <div class="cols">
         <div>
-          <h2>But</h2>
-          <p>Mesurer un sprint (ex. 100 m) ou une course lancée, avec calcul de la <b>vitesse moyenne</b>.</p>
-          <h2>Étapes</h2>
           <ul>
-            <li>Saisir <b>Nom, Prénom, Classe, Sexe</b> et la <b>Distance (m)</b>.</li>
-            <li><b>Start</b> au signal, <b>Stop</b> à l’arrivée.</li>
-            <li>Le temps est au <b>centième</b>, la vitesse est calculée.</li>
-            <li>Générer le <b>QR ScanProf</b> pour enregistrer.</li>
+            <li>Saisir <b>Nom</b>, <b>Prénom</b>, <b>Classe</b>, <b>Sexe</b>.</li>
+            <li>Entrer la <b>Distance (m)</b> à parcourir.</li>
+            <li><b>Démarrer</b> au signal, <b>Stop</b> à l’arrivée.</li>
           </ul>
         </div>
         <div>
-          <h2>Astuce EPS</h2>
-          <div class="tips">Pour un 100 m, déclenche au **1er appui** plutôt qu’au “Go” vocal : plus reproductible.</div>
+          <ul>
+            <li>Le temps est au <b>centième</b>.</li>
+            <li>La <b>vitesse moyenne</b> est calculée automatiquement.</li>
+            <li><b>QR ScanProf</b> disponible pour enregistrer le résultat.</li>
+          </ul>
         </div>
       </div>
     </section>
 
+    <!-- Minuteur simple -->
     <section class="block minuteur">
-      <span class="tag tag-m">Minuteur simple</span>
+      <div class="head">
+        <h2 class="title">Minuteur simple</h2>
+        <span class="tag">Compte à rebours</span>
+      </div>
       <div class="cols">
         <div>
-          <h2>But</h2>
-          <p>Lancer un compte à rebours avec un <b>cercle visuel</b> et un <b>décompte 3‑2‑1</b> (bips).</p>
-          <h2>Étapes</h2>
           <ul>
-            <li>Régler <b>minutes</b> et <b>secondes</b>.</li>
-            <li><b>Lancer</b> → le minuteur démarre après 3‑2‑1.</li>
-            <li>À zéro : bip de fin. <b>Plein écran</b> conseillé.</li>
+            <li>Régler <b>Minutes</b> et <b>Secondes</b>.</li>
+            <li>Appuyer sur <b>Lancer</b> : décompte <b>3‑2‑1</b> puis départ (bip).</li>
+            <li><b>Pause</b> pour interrompre / reprendre ; <b>Réinitialiser</b> pour repartir de zéro.</li>
           </ul>
         </div>
         <div>
-          <h2>Astuce EPS</h2>
-          <div class="tips">Pour les ateliers, prépare des préréglages (ex. 45 s / 1’30 / 3’).</div>
+          <ul>
+            <li>Le cercle visuel se <b>réduit</b> pendant le décompte.</li>
+            <li>En plein écran, l’affichage est optimisé (grossi).</li>
+          </ul>
         </div>
       </div>
     </section>
 
+    <!-- Minuteur distance & vitesse -->
     <section class="block distance">
-      <span class="tag tag-d">Minuteur distance & vitesse</span>
+      <div class="head">
+        <h2 class="title">Minuteur distance & vitesse</h2>
+        <span class="tag">Course au temps</span>
+      </div>
       <div class="cols">
         <div>
-          <h2>But</h2>
-          <p>Suivre une course au temps (ex. 6’) avec comptage des <b>tours</b>, <b>distance totale</b>, <b>vitesse moyenne</b> et <b>VMA estimée</b> (si durée ≥ 6’).</p>
-          <h2>Étapes</h2>
           <ul>
-            <li>Saisir identité + <b>Piste (m)</b> + <b>Minutes/Secondes</b>.</li>
-            <li><b>Lancer</b> → 3‑2‑1, puis utiliser <b>+1 tour</b> à chaque passage.</li>
-            <li>À la fin : choisir la <b>fraction</b> (0 / ¼ / ½ / ¾) pour ajuster la distance.</li>
-            <li>Générer le <b>QR ScanProf</b>.</li>
+            <li>Saisir l’identité + la <b>Piste (m)</b> + <b>Minutes</b>/<b>Secondes</b>.</li>
+            <li><b>Lancer</b> → décompte 3‑2‑1 puis départ (bip).</li>
+            <li>À chaque passage, appuyer sur <b>+1 tour</b>.</li>
           </ul>
         </div>
         <div>
-          <h2>Conseils observateur</h2>
-          <div class="tips">
-            Encourage une allure <b>régulière</b>, annonce les passages (ex. “2’ restantes”).  
-            Pour des durées > 6’, la VMA affichée est un bon repère de l’allure cible.
-          </div>
+          <ul>
+            <li>À la fin, choisir la <b>fraction</b> de tour (0 / ¼ / ½ / ¾).</li>
+            <li>La <b>distance totale</b>, la <b>vitesse moyenne</b> et la <b>VMA estimée</b> (si durée ≥ 6’) sont affichées.</li>
+            <li>Générer le <b>QR ScanProf</b> pour sauvegarder.</li>
+          </ul>
         </div>
       </div>
     </section>

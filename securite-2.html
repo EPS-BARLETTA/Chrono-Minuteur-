@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fiche sécurité — ChronoMinuteur (EPS)</title>
+<style>
+  :root{
+    --bg:#0f172a; --fg:#e5e7eb; --muted:#94a3b8;
+    --b1:#1f2937; --card:#111827;
+    --gS:#0ea5e9; --gE:#22c55e; /* prévention */
+    --gU:#ef4444; --gU2:#f97316; /* urgences */
+    --gB:#a855f7; --gB2:#6366f1; /* blessures */
+    --gH:#f59e0b; --gH2:#fbbf24; /* chaleur */
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial}
+  header,footer{padding:12px 16px}
+  a.back{color:#a3aed5;text-decoration:none}
+  main{max-width:1100px;margin:0 auto;padding:18px;display:grid;gap:16px}
+  .block{border:1px solid var(--b1);border-radius:18px;padding:16px;background:var(--card);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  .title{margin:0 0 10px;font-size:1.25rem}
+  .muted{color:var(--muted)}
+  .grid{display:grid;gap:12px}
+  @media(min-width:920px){ .cols-2{grid-template-columns:1fr 1fr} .cols-3{grid-template-columns:repeat(3,1fr)} }
+  .tag{display:inline-block;padding:4px 10px;border-radius:999px;font-weight:900;font-size:.85rem;margin-bottom:8px}
+  .prevention{background:linear-gradient(135deg,var(--gS),var(--gE));color:#06201a}
+  .urgence{background:linear-gradient(135deg,var(--gU),var(--gU2));color:#2b0a0a}
+  .blessure{background:linear-gradient(135deg,var(--gB),var(--gB2));color:#0c0a2b}
+  .chaleur{background:linear-gradient(135deg,var(--gH),var(--gH2));color:#291a03}
+  .card-callout{border:2px dashed rgba(255,255,255,.18);border-radius:14px;padding:12px;background:#0b1222}
+  .cards{display:grid;gap:12px}
+  @media(min-width:840px){ .cards{grid-template-columns:1fr 1fr} }
+  .li{margin:4px 0}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#0b1222;border:1px solid #22314b;font-weight:800}
+  .emoj{font-size:1.2rem}
+  footer{background:#e5e7eb;color:#111827;text-align:center;font-weight:700}
+</style>
+</head>
+<body>
+  <header><a class="back" href="./index.html">← Accueil</a></header>
+  <main>
+    <h1 style="margin:0 0 6px">Fiche sécurité — EPS</h1>
+    <p class="muted" style="margin-top:-2px">
+      Repères visuels pour la conduite à tenir en séance. 
+      <b>Dans notre établissement : en cas de blessure, contacter d’abord l’infirmerie ; ce sont les infirmier·ère·s qui gèrent l’appel au 112.</b>
+    </p>
+
+    <!-- Principes de base (prévention) -->
+    <section class="block">
+      <span class="tag prevention">🛡️ Prévention — principes</span>
+      <div class="grid cols-3">
+        <div class="card-callout">
+          <h3 class="title">Échauffement & tenue</h3>
+          <ul style="margin:6px 0 0 18px">
+            <li class="li">Échauffement progressif 8–12 min (général → spécifique).</li>
+            <li class="li">Chaussures adaptées, lacets noués, cheveux attachés.</li>
+            <li class="li">Retirer bijoux/objets coupants ; poches vides.</li>
+          </ul>
+        </div>
+        <div class="card-callout">
+          <h3 class="title">Espace & matériel</h3>
+          <ul style="margin:6px 0 0 18px">
+            <li class="li">Surface dégagée, lignes lisibles, zones de sécurité.</li>
+            <li class="li">Matériel stable, non glissant, rangé hors trajectoires.</li>
+            <li class="li">Consignes claires ; circulation des élèves contrôlée.</li>
+          </ul>
+        </div>
+        <div class="card-callout">
+          <h3 class="title">Hydratation & météo</h3>
+          <ul style="margin:6px 0 0 18px">
+            <li class="li">Boire régulièrement, avant d’avoir soif.</li>
+            <li class="li">Adapter charge & pauses à la chaleur/froid/vent.</li>
+            <li class="li">À la chaleur : zones d’ombre, casquette, crème solaire.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Urgences / Alerte via infirmerie -->
+    <section class="block">
+      <span class="tag urgence">🚨 Urgences — alerte via infirmerie</span>
+      <div class="cards">
+        <div class="card-callout">
+          <h3 class="title">Perte de connaissance / trauma grave</h3>
+          <ul style="margin:6px 0 0 18px">
+            <li class="li"><b>Contacter immédiatement l’infirmerie</b>. Ne pas laisser seul.</li>
+            <li class="li">Respiration OK → <b>PLS</b>. Pas de boisson/aliment.</li>
+            <li class="li">Respiration absente → <b>alerter l’infirmerie + RCP si formé</b>.</li>
+            <li class="li">Traumatisme crânien/colonne : <b>ne pas mobiliser</b>.</li>
+          </ul>
+        </div>
+        <div class="card-callout">
+          <h3 class="title">Détresse respiratoire / allergie sévère</h3>
+          <ul style="margin:6px 0 0 18px">
+            <li class="li"><b>Appeler l’infirmerie</b>, position demi‑assise, vêtements desserrés.</li>
+            <li class="li">Si trousse spécifique (ordonnance) : <b>suivre protocole</b>.</li>
+            <li class="li">Surveiller en continu, rassurer, noter l’heure.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pill emoj" style="margin-top:8px">🩺 Infirmerie — point d’alerte prioritaire (gestion 112)</div>
+    </section>
+
+    <!-- Blessures courantes -->
+    <section class="block">
+      <span class="tag blessure">🩹 Blessures courantes — conduite à tenir</span>
+      <div class="cards">
+        <div class="card-callout">
+          <h3 class="title">Entorse / douleur articulaire ou musculaire</h3>
+          <ul style="margin:6px 0 0 18px">
+            <li class="li"><b>Arrêt immédiat</b>, protéger la zone.</li>
+            <li class="li"><b>Glace</b> 10–15 min (tissu interposé), à répéter.</li>
+            <li class="li"><b>Compression</b> modérée + <b>élévation</b> si possible.</li>
+            <li class="li"><b>Prévenir l’infirmerie</b>. Évaluation médicale si douleur importante.</li>
+          </ul>
+        </div>
+        <div class="card-callout">
+          <h3 class="title">Plaies / saignements</h3>
+          <ul style="margin:6px 0 0 18px">
+            <li class="li"><b>Protection</b> (gants si disponibles).</li>
+            <li class="li">Nettoyer autour, <b>compression</b> de la plaie → pansement.</li>
+            <li class="li"><b>Informer l’infirmerie</b> ; surveillance : signes d’infection, malaise.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="muted" style="margin-top:6px">Ces repères ne remplacent pas une formation de premiers secours. Toujours suivre le protocole interne et l’avis médical.</p>
+    </section>
+
+    <!-- Chaleur / déshydratation -->
+    <section class="block">
+      <span class="tag chaleur">🌞 Chaleur / déshydratation</span>
+      <div class="grid cols-2">
+        <div class="card-callout">
+          <h3 class="title">Signes d’alerte</h3>
+          <ul style="margin:6px 0 0 18px">
+            <li class="li">Maux de tête, crampes, nausées, vertiges.</li>
+            <li class="li">Peau chaude/rouge, sudation excessive ou absente.</li>
+            <li class="li">Troubles du comportement / propos confus.</li>
+          </ul>
+        </div>
+        <div class="card-callout">
+          <h3 class="title">Que faire</h3>
+          <ul style="margin:6px 0 0 18px">
+            <li class="li">Mettre à l’ombre, rafraîchir (eau, serviette humide, ventilation).</li>
+            <li class="li">Hydratation par petites gorgées si conscience normale.</li>
+            <li class="li"><b>Contacter l’infirmerie</b> si aggravation / non amélioration rapide.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+  <footer>ChronoMinuteur - Equipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
+</body>
+</html>
