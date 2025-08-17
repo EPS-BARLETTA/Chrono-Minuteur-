@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fiche sécurité — Élèves (EPS)</title>
+<style>
+  :root{
+    --bg:#0f172a; --fg:#e5e7eb; --muted:#94a3b8; --card:#111827; --border:#1f2937;
+    --c-prev-a:#0ea5e9; --c-prev-b:#22c55e;
+    --c-urg-a:#ef4444; --c-urg-b:#f97316;
+    --c-bls-a:#a855f7; --c-bls-b:#6366f1;
+    --c-hot-a:#f59e0b; --c-hot-b:#fbbf24;
+    --c-hypo-a:#10b981; --c-hypo-b:#059669;
+    /* Risques */
+    --r1a:#10b981; --r1b:#059669;
+    --r2a:#f59e0b; --r2b:#d97706;
+    --r3a:#f97316; --r3b:#ea580c;
+    --r4a:#ef4444; --r4b:#b91c1c;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+  header,footer{padding:12px 16px}
+  a.back{color:#a3aed5;text-decoration:none}
+  main{max-width:1000px;margin:0 auto;padding:18px;display:grid;gap:14px}
+  .block{border:1px solid var(--border);border-radius:16px;padding:14px;background:var(--card);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  .head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 6px}
+  .title{margin:0;font-size:1.1rem}
+  .tag{display:inline-block;padding:4px 10px;border-radius:999px;font-weight:900;font-size:.85rem;border:1px solid rgba(255,255,255,.2)}
+  .muted{color:var(--muted)}
+  ul{margin:6px 0 0 18px}
+  li{margin:4px 0}
+  .grad{padding:10px;border-radius:12px}
+  .prev{background:linear-gradient(135deg,var(--c-prev-a),var(--c-prev-b));color:#05222a}
+  .urg{background:linear-gradient(135deg,var(--c-urg-a),var(--c-urg-b));color:#2b0a0a}
+  .bls{background:linear-gradient(135deg,var(--c-bls-a),var(--c-bls-b));color:#0b0a2b}
+  .hot{background:linear-gradient(135deg,var(--c-hot-a),var(--c-hot-b));color:#2b1b00}
+  .hypo{background:linear-gradient(135deg,var(--c-hypo-a),var(--c-hypo-b));color:#031d14}
+  /* Echelle de risque */
+  .risks{display:grid;gap:10px}
+  @media(min-width:820px){ .risks{grid-template-columns:repeat(4,1fr)} }
+  .level{border-radius:14px;padding:12px;border:1px solid rgba(255,255,255,.18)}
+  .l1{background:linear-gradient(135deg,var(--r1a),var(--r1b));color:#021a12}
+  .l2{background:linear-gradient(135deg,var(--r2a),var(--r2b));color:#261a02}
+  .l3{background:linear-gradient(135deg,var(--r3a),var(--r3b));color:#2a0f03}
+  .l4{background:linear-gradient(135deg,var(--r4a),var(--r4b));color:#2b0a0a}
+  .lvl-h{display:flex;justify-content:space-between;align-items:center;margin:0 0 6px}
+  .lvl-h b{font-size:1rem}
+  .badge{display:inline-block;padding:4px 8px;border-radius:999px;border:1px solid rgba(0,0,0,.2);background:rgba(255,255,255,.22);font-weight:900}
+  footer{background:#e5e7eb;color:#111827;text-align:center;font-weight:700}
+</style>
+</head>
+<body>
+  <header><a class="back" href="./index.html">← Accueil</a></header>
+  <main>
+    <h1 style="margin:0 0 6px">Fiche sécurité — à lire par les élèves</h1>
+    <p class="muted" style="margin-top:-2px">En cas de problème, <b>préviens d’abord l’enseignant</b>. Reste calme et suis les consignes.</p>
+
+    <!-- 1) Échelle de risque (gradation 1→4) -->
+    <section class="block">
+      <div class="head">
+        <h2 class="title">Échelle de risque — du plus faible au plus grave</h2>
+        <span class="tag">Graduation</span>
+      </div>
+      <div class="risks">
+        <div class="level l1">
+          <div class="lvl-h"><b>1 — Inconfort</b><span class="badge">adapter</span></div>
+          <ul>
+            <li>Ex. point de côté, lacet défait.</li>
+            <li><b>Geste :</b> s’arrêter 1 min, boire, rattacher, reprendre doucement.</li>
+          </ul>
+        </div>
+        <div class="level l2">
+          <div class="lvl-h"><b>2 — Blessure légère</b><span class="badge">prévenir</span></div>
+          <ul>
+            <li>Ex. petite entorse, plaie superficielle.</li>
+            <li><b>Geste :</b> <b>prévenir l’enseignant</b>, arrêter l’activité, premiers soins simples.</li>
+          </ul>
+        </div>
+        <div class="level l3">
+          <div class="lvl-h"><b>3 — Situation préoccupante</b><span class="badge">alerter</span></div>
+          <ul>
+            <li>Ex. malaise, saignement important, douleur forte.</li>
+            <li><b>Geste :</b> <b>ne pas s’agglutiner</b> ; <b>un élève reste</b> avec le blessé, <b>un autre va prévenir l’enseignant</b>.</li>
+          </ul>
+        </div>
+        <div class="level l4">
+          <div class="lvl-h"><b>4 — Urgence vitale</b><span class="badge">enseignant</span></div>
+          <ul>
+            <li>Ex. perte de connaissance, respiration anormale, propos incohérents.</li>
+            <li><b>Geste :</b> <b>prévenir aussitôt l’enseignant</b> qui gère infirmerie / 112 et les gestes à effectuer.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="muted" style="margin-top:6px">En cas de doute, <b>considère la situation comme plus grave</b> et préviens l’enseignant.</p>
+    </section>
+
+    <!-- 2) Prévention courte -->
+    <section class="block">
+      <div class="head">
+        <h2 class="title">Échauffement & Hydratation</h2>
+        <span class="tag">Prévention</span>
+      </div>
+      <div class="grad prev">
+        <ul>
+          <li>Échauffement progressif (8–12 min) avant l’effort.</li>
+          <li>Bois régulièrement, surtout par temps chaud.</li>
+          <li>Chaussures lacées, pas de bijoux, poches vides.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 3) Blessures courantes (AVANT urgences) -->
+    <section class="block">
+      <div class="head">
+        <h2 class="title">Blessures courantes — conduite à tenir</h2>
+        <span class="tag">Entorse / Plaie</span>
+      </div>
+      <div class="grad bls">
+        <ul>
+          <li><b>Entorse / douleur</b> : arrêter l’activité, protéger la zone, prévenir l’enseignant. Si demandé : glace 10–15 min (tissu).</li>
+          <li><b>Plaie / saignement</b> : protéger (si possible), prévenir l’enseignant. Compression de la plaie si nécessaire.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 4) Urgences vitales — APRÈS blessures courantes -->
+    <section class="block">
+      <div class="head">
+        <h2 class="title">Urgences — alerter sans délai</h2>
+        <span class="tag">Rappel</span>
+      </div>
+      <div class="grad urg">
+        <ul>
+          <li><b>Commence par prévenir l’enseignant.</b></li>
+          <li><b>Ne vous agglutinez pas.</b> Un élève <b>reste avec le blessé</b>, un autre <b>va prévenir l’enseignant</b>.</li>
+          <li>L’enseignant gère l’alerte (infirmerie / 112) et les gestes à faire.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 5) Chaleur / déshydratation -->
+    <section class="block">
+      <div class="head">
+        <h2 class="title">Chaleur & Déshydratation</h2>
+        <span class="tag">Signes & gestes</span>
+      </div>
+      <div class="grad hot">
+        <ul>
+          <li>Signes : maux de tête, vertiges, crampes, nausées.</li>
+          <li>Gestes : aller à l’ombre, enlever la veste, boire par petites gorgées, prévenir l’enseignant.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 6) Hypoglycémie -->
+    <section class="block">
+      <div class="head">
+        <h2 class="title">Hypoglycémie</h2>
+        <span class="tag">Baisse de sucre</span>
+      </div>
+      <div class="grad hypo">
+        <ul>
+          <li>Signes : tremblements, sueurs, pâleur, faim, mal de tête, propos confus.</li>
+          <li>Gestes : <b>prévenir l’enseignant</b>. Si la personne est consciente : boisson sucrée ou sucre rapide si l’enseignant l’autorise. Surveiller.</li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+  <footer>ChronoMinuteur - Equipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
+</body>
+</html>
