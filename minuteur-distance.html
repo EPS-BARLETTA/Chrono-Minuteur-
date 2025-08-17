@@ -8,7 +8,7 @@
 </head>
 <body style="margin:0;background:#0f172a;color:#e5e7eb;font:16px/1.45 system-ui">
 <style>
-  :root{--gA:#ec4899;--gB:#ef4444}
+  :root{--gA:#ec4899;--gB:#ef4444;--midA:#06b6d4;--midB:#22c55e}
   .wrap{min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto}
   header,footer{padding:10px 12px}
   footer{background:#e5e7eb;color:#111827;text-align:center;font-weight:700}
@@ -29,24 +29,35 @@
   .stat{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
   .box{background:#0b1222;border:1px solid #23304a;border-radius:12px;padding:10px;text-align:center}
   .box b{font-size:1.2rem}
-  .fraction-panel{display:none;gap:10px;justify-content:center;margin-top:10px}
+  /* ===== Nouvelle barre centrale : tours / distance / fraction ===== */
+  .midbar{margin:10px auto 0;display:grid;gap:10px;justify-items:center;background:linear-gradient(135deg,var(--midA),var(--midB));border-radius:16px;padding:10px;border:1px solid #134e4a}
+  @media(min-width:900px){ .midbar{grid-template-columns:1fr auto} }
+  .mid-left{display:grid;gap:8px;align-items:center;justify-items:center}
+  @media(min-width:780px){ .mid-left{grid-template-columns:repeat(3,1fr)} }
+  .pill{background:#0b1222;border:1px solid #1f2a43;border-radius:12px;padding:10px;display:grid;gap:6px;min-width:220px}
+  .pill label{margin:0;opacity:.85}
+  .pill input{text-align:center}
+  .mid-right{display:none;align-items:center;justify-content:center}
+  .mid-right .fraction-panel{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
   .chip{border:0;border-radius:999px;padding:10px 14px;font-weight:900;cursor:pointer}
   .chip-0{background:#334155;color:#dbeafe}
   .chip-25{background:#1e293b;color:#86efac}
   .chip-50{background:#1e293b;color:#fef08a}
   .chip-75{background:#1e293b;color:#fca5a5}
-  body.fs header, body.fs footer, body.fs .form, body.fs .stat, body.fs .fraction-panel, body.fs .qrbar{display:none}
+  /* Plein écran : masquer header/footer/form/stats, MAIS garder la midbar compacte */
+  body.fs header, body.fs footer, body.fs .form, body.fs .stat, body.fs .qrbar{display:none}
   body.fs .card{background:transparent;border:0;box-shadow:none;padding:0;width:100vw;max-width:100vw}
   body.fs .big{font-size:clamp(96px,32vmin,360px)}
   body.fs .btn{padding:24px 28px;font-size:clamp(18px,3.2vw,26px);border-radius:18px}
-  #cd{position:fixed;inset:0;display:none;place-items:center;background:rgba(0,0,0,.6);z-index:9999}
-  #cd .num{font-weight:900;font-size:clamp(96px,30vmin,360px)}
+  body.fs .midbar{display:grid}
+  body.fs .mid-right{display:none} /* fraction non nécessaire en plein écran */
 </style>
 <div class="wrap">
   <header><a class="back" href="./modes.html">← Modes</a></header>
   <main class="main">
     <div class="card">
-      <h2 style="margin:6px 0 10px">Minuteur avec distance & vitesse</h2>
+      <h2 style="margin:6px 0 10px">Minuteur avec distance &amp; vitesse</h2>
+      <!-- Formulaire (identité + paramètres) -->
       <div class="form">
         <div class="grid cols-5">
           <div class="fg"><div class="inner"><label>Nom</label><input id="nom" placeholder="Martin"></div></div>
@@ -58,11 +69,13 @@
         <div class="grid cols-5" style="margin-top:10px">
           <div class="fg"><div class="inner"><label>Minutes</label><input id="mins" type="number" min="0" step="1" value="6" inputmode="numeric"></div></div>
           <div class="fg"><div class="inner"><label>Secondes</label><input id="secs" type="number" min="0" max="59" step="1" value="0" inputmode="numeric"></div></div>
-          <div class="fg"><div class="inner"><label>Tours comptés</label><input id="laps" type="number" value="0" disabled></div></div>
-          <div class="fg"><div class="inner"><label>Distance totale (m)</label><input id="dist" type="number" value="0" disabled></div></div>
-          <div class="fg"><div class="inner"><label>Fraction</label><input id="frac" type="text" value="0" disabled></div></div>
+          <!-- Champs conservés pour compatibilité, mais déplacés visuellement dans la midbar -->
+          <div class="fg" style="display:none"><div class="inner"><label>Tours comptés</label><input id="laps" type="number" value="0" disabled></div></div>
+          <div class="fg" style="display:none"><div class="inner"><label>Distance totale (m)</label><input id="dist" type="number" value="0" disabled></div></div>
+          <div class="fg" style="display:none"><div class="inner"><label>Fraction</label><input id="frac" type="text" value="0" disabled></div></div>
         </div>
       </div>
+      <!-- Affichage temps + contrôles -->
       <div id="time" class="big">6:00</div>
       <div class="row">
         <button id="b-start" class="btn btn-acc">Lancer</button>
@@ -71,50 +84,56 @@
         <button id="b-reset" class="btn btn-dgr" disabled>Réinitialiser</button>
         <button id="b-full" class="btn btn-ok">Plein écran</button>
       </div>
+
+      <!-- Nouvelle MIDBAR centrée : Nombre de tours / Distance totale / Fraction (+ chips à la fin) -->
+      <div class="midbar">
+        <div class="mid-left">
+          <div class="pill">
+            <label>Nombre de tours</label>
+            <input id="laps_display" value="0" disabled>
+          </div>
+          <div class="pill">
+            <label>Distance totale (m)</label>
+            <input id="dist_display" value="0" disabled>
+          </div>
+          <div class="pill">
+            <label>Fraction</label>
+            <input id="frac_display" value="0" disabled>
+          </div>
+        </div>
+        <div class="mid-right">
+          <div id="fraction" class="fraction-panel">
+            <button class="chip chip-0" data-f="0">+ 0</button>
+            <button class="chip chip-25" data-f="0.25">+ 1/4</button>
+            <button class="chip chip-50" data-f="0.5">+ 1/2</button>
+            <button class="chip chip-75" data-f="0.75">+ 3/4</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Statistiques vitesse / VMA -->
       <div class="stat">
         <div class="box"><div class="muted">Vitesse moyenne</div><b id="v-kmh">0.00 km/h</b></div>
         <div class="box"><div class="muted">VMA estimée (≥6’)</div><b id="vma">—</b></div>
       </div>
-      <div id="fraction" class="fraction-panel">
-        <button class="chip chip-0" data-f="0">+ 0</button>
-        <button class="chip chip-25" data-f="0.25">+ 1/4</button>
-        <button class="chip chip-50" data-f="0.5">+ 1/2</button>
-        <button class="chip chip-75" data-f="0.75">+ 3/4</button>
-      </div>
+
+      <!-- QR -->
       <div class="row qrbar" style="margin-top:12px">
         <button id="b-qr" class="btn btn-acc" disabled>QR ScanProf</button>
       </div>
-      <p class="muted" style="margin-top:6px">Fin de minuteur : cliquez sur la fraction de tour, puis générez le QR.</p>
+      <p class="muted" style="margin-top:6px">Fin de minuteur : choisissez la fraction de tour, puis générez le QR.</p>
     </div>
   </main>
   <footer>ChronoMinuteur - Equipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
 </div>
-<div id="cd"><div class="num" id="cdnum">3</div></div>
-
+<!-- Beep helpers -->
 <script>
   let __AC__ = null;
-  function audioCtx(){
-    if(!__AC__){
-      const Ctx = window.AudioContext || window.webkitAudioContext;
-      __AC__ = new Ctx();
-    }
-    if(__AC__.state === 'suspended') __AC__.resume();
-    return __AC__;
-  }
-  function beep(freq=880, duration=0.18, volume=0.2){
-    const ac = audioCtx();
-    const o = ac.createOscillator();
-    const g = ac.createGain();
-    o.type = 'sine'; o.frequency.value = freq;
-    g.gain.setValueAtTime(volume, ac.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + duration);
-    o.connect(g).connect(ac.destination);
-    o.start(); o.stop(ac.currentTime + duration);
-  }
+  function audioCtx(){ const C = window.AudioContext || window.webkitAudioContext; if(!__AC__) __AC__ = new C(); if(__AC__.state==='suspended') __AC__.resume(); return __AC__; }
+  function beep(freq=880, duration=0.18, volume=0.2){ const ac=audioCtx(); const o=ac.createOscillator(); const g=ac.createGain(); o.type='sine'; o.frequency.value=freq; g.gain.setValueAtTime(volume, ac.currentTime); g.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + duration); o.connect(g).connect(ac.destination); o.start(); o.stop(ac.currentTime + duration); }
   function patternStart(){ beep(880,0.18,0.25); }
   function patternEnd(){ beep(440,0.25,0.25); setTimeout(()=>beep(440,0.25,0.25), 120); }
 </script>
-
 <script>
   const $=s=>document.querySelector(s);
   let dur=6*60, remain=dur, run=false, t0=0, raf=null, startedOnce=false, counting=false;
@@ -124,9 +143,17 @@
   function computeDur(){ const m=Math.max(0,Number($('#mins').value)); const sec=Math.max(0,Math.min(59,Number($('#secs').value))); return m*60+sec; }
   function draw(){
     $('#time').textContent=fmt(remain);
-    $('#laps').value=String(laps);
-    $('#dist').value=String(Math.round(dist));
-    $('#frac').value=String(fraction);
+    // Valeurs techniques conservées (compat code existant)
+    const lapsEl=$('#laps'), distEl=$('#dist'), fracEl=$('#frac');
+    if(lapsEl) lapsEl.value=String(laps);
+    if(distEl) distEl.value=String(Math.round(dist));
+    if(fracEl) fracEl.value=String(fraction);
+
+    // Nouveaux miroirs visuels dans la midbar
+    $('#laps_display').value=String(laps);
+    $('#dist_display').value=String(Math.round(dist));
+    $('#frac_display').value=String(fraction);
+
     const v=kmh(dist, dur-remain); $('#v-kmh').textContent = v.toFixed(2)+' km/h';
     if(dur>=360){ $('#vma').textContent = v.toFixed(2)+' km/h'; } else { $('#vma').textContent='—'; }
   }
@@ -141,23 +168,25 @@
     if(remain<=0){ remain=0; run=false; cancelAnimationFrame(raf);
       patternEnd();
       $('#b-start').disabled=false; $('#b-pause').disabled=true; $('#b-reset').disabled=false; $('#b-lap').disabled=true;
-      $('#fraction').style.display='flex'; $('#b-qr').disabled=false;
+      // Affiche les chips fraction dans la midbar, à droite
+      document.querySelector('.mid-right').style.display='flex';
+      $('#b-qr').disabled=false;
     }
     draw(); if(run) raf=requestAnimationFrame(tick);
   }
 
-  function doCountdown(cb){ if(counting) return; counting=true; const cd=$('#cd'), num=$('#cdnum'); let n=3; cd.style.display='grid'; num.textContent=n; beep(600,0.18,0.3);
-    const iv=setInterval(()=>{ n--; if(n>0){ num.textContent=n; beep(600,0.18,0.3); } else { clearInterval(iv); cd.style.display='none'; counting=false; patternStart(); cb && cb(); } }, 1000);
+  function doCountdown(cb){ if(counting) return; counting=true; let n=3; const ov=document.createElement('div'); ov.id='cd'; ov.style.cssText='position:fixed;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.6);z-index:9999'; const d=document.createElement('div'); d.id='cdnum'; d.style.cssText='font-weight:900;font-size:clamp(96px,30vmin,360px);color:#fff'; d.textContent=n; ov.appendChild(d); document.body.appendChild(ov); beep(600,0.18,0.3);
+    const iv=setInterval(()=>{ n--; if(n>0){ d.textContent=n; beep(600,0.18,0.3); } else { clearInterval(iv); ov.remove(); counting=false; patternStart(); cb && cb(); } }, 1000);
   }
 
   $('#b-start').onclick=()=>{ if(run||counting) return; if(!startedOnce){ doCountdown(()=>{ startedOnce=true; run=true; t0=Date.now()-(dur-remain)*1000;
-      $('#b-start').disabled=true; $('#b-pause').disabled=false; $('#b-reset').disabled=true; $('#b-lap').disabled=false; $('#fraction').style.display='none'; $('#b-qr').disabled=true; fraction=0; dist=laps*lapm; draw(); tick();
+      $('#b-start').disabled=true; $('#b-pause').disabled=false; $('#b-reset').disabled=true; $('#b-lap').disabled=false; document.querySelector('.mid-right').style.display='none'; $('#b-qr').disabled=true; fraction=0; dist=laps*lapm; draw(); tick();
     }); } else {
-      run=true; t0=Date.now()-(dur-remain)*1000; $('#b-start').disabled=true; $('#b-pause').disabled=false; $('#b-reset').disabled=true; $('#b-lap').disabled=false; $('#fraction').style.display='none'; $('#b-qr').disabled=true; draw(); tick();
+      run=true; t0=Date.now()-(dur-remain)*1000; $('#b-start').disabled=true; $('#b-pause').disabled=false; $('#b-reset').disabled=true; $('#b-lap').disabled=false; document.querySelector('.mid-right').style.display='none'; $('#b-qr').disabled=true; draw(); tick();
     }
   };
   $('#b-pause').onclick=()=>{ run=false; $('#b-start').disabled=false; $('#b-pause').disabled=true; $('#b-reset').disabled=false; };
-  $('#b-reset').onclick=()=>{ run=false; remain=dur; laps=0; dist=0; fraction=0; startedOnce=false; draw(); $('#b-start').disabled=false; $('#b-pause').disabled=true; $('#b-reset').disabled=true; $('#b-lap').disabled=true; $('#fraction').style.display='none'; $('#b-qr').disabled=true; };
+  $('#b-reset').onclick=()=>{ run=false; remain=dur; laps=0; dist=0; fraction=0; startedOnce=false; draw(); $('#b-start').disabled=false; $('#b-pause').disabled=true; $('#b-reset').disabled=true; $('#b-lap').disabled=true; document.querySelector('.mid-right').style.display='none'; $('#b-qr').disabled=true; };
   $('#b-lap').onclick=()=>{ if(!run) return; laps+=1; dist = laps*lapm; draw(); };
   function toggleFS(){ if(!document.fullscreenElement){ document.documentElement.requestFullscreen(); } else { document.exitFullscreen(); } }
   $('#b-full').onclick=toggleFS;
