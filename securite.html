@@ -2,168 +2,115 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Fiche sécurité — ChronoMinuteur (EPS)</title>
+<title>Fiche sécurité — Élèves (EPS)</title>
 <style>
   :root{
-    --bg:#0f172a; --fg:#e5e7eb; --muted:#94a3b8;
-    --b1:#1f2937; --card:#111827;
-    --gS:#0ea5e9; --gE:#22c55e; /* prévention */
-    --gU:#ef4444; --gU2:#f97316; /* urgences */
-    --gB:#a855f7; --gB2:#6366f1; /* blessures */
-    --gH:#f59e0b; --gH2:#fbbf24; /* chaleur */
+    --bg:#0f172a; --fg:#e5e7eb; --muted:#94a3b8; --card:#111827; --border:#1f2937;
+    --c-prev-a:#0ea5e9; --c-prev-b:#22c55e;
+    --c-urg-a:#ef4444; --c-urg-b:#f97316;
+    --c-bls-a:#a855f7; --c-bls-b:#6366f1;
+    --c-hot-a:#f59e0b; --c-hot-b:#fbbf24;
+    --c-hypo-a:#10b981; --c-hypo-b:#059669;
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
   header,footer{padding:12px 16px}
   a.back{color:#a3aed5;text-decoration:none}
-  main{max-width:1100px;margin:0 auto;padding:18px;display:grid;gap:16px}
-  .block{border:1px solid var(--b1);border-radius:18px;padding:16px;background:var(--card);box-shadow:0 10px 30px rgba(0,0,0,.35)}
-  .title{margin:0 0 10px;font-size:1.25rem}
+  main{max-width:1000px;margin:0 auto;padding:18px;display:grid;gap:14px}
+  .block{border:1px solid var(--border);border-radius:16px;padding:14px;background:var(--card);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  .head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 6px}
+  .title{margin:0;font-size:1.1rem}
+  .tag{display:inline-block;padding:4px 10px;border-radius:999px;font-weight:900;font-size:.85rem;border:1px solid rgba(255,255,255,.2)}
+  .grad{padding:10px;border-radius:12px}
+  .prev{background:linear-gradient(135deg,var(--c-prev-a),var(--c-prev-b));color:#05222a}
+  .urg{background:linear-gradient(135deg,var(--c-urg-a),var(--c-urg-b));color:#2b0a0a}
+  .bls{background:linear-gradient(135deg,var(--c-bls-a),var(--c-bls-b));color:#0b0a2b}
+  .hot{background:linear-gradient(135deg,var(--c-hot-a),var(--c-hot-b));color:#2b1b00}
+  .hypo{background:linear-gradient(135deg,var(--c-hypo-a),var(--c-hypo-b));color:#031d14}
+  ul{margin:6px 0 0 18px}
+  li{margin:4px 0}
   .muted{color:var(--muted)}
-  .grid{display:grid;gap:12px}
-  @media(min-width:920px){ .cols-2{grid-template-columns:1fr 1fr} .cols-3{grid-template-columns:repeat(3,1fr)} }
-  .tag{display:inline-block;padding:4px 10px;border-radius:999px;font-weight:900;font-size:.85rem;margin-bottom:8px}
-  .prevention{background:linear-gradient(135deg,var(--gS),var(--gE));color:#06201a}
-  .urgence{background:linear-gradient(135deg,var(--gU),var(--gU2));color:#2b0a0a}
-  .blessure{background:linear-gradient(135deg,var(--gB),var(--gB2));color:#0c0a2b}
-  .chaleur{background:linear-gradient(135deg,var(--gH),var(--gH2));color:#291a03}
-  .card-callout{border:2px dashed rgba(255,255,255,.18);border-radius:14px;padding:12px;background:#0b1222}
-  .cards{display:grid;gap:12px}
-  @media(min-width:840px){ .cards{grid-template-columns:1fr 1fr} }
-  .li{margin:4px 0}
-  .checklist{display:grid;gap:8px}
-  .check{display:flex;gap:8px;align-items:flex-start}
-  .check b{min-width:1.2rem;text-align:center}
-  .cta{display:grid;gap:8px}
-  .cta .btn{display:inline-block;padding:10px 14px;border-radius:12px;font-weight:900;border:1px solid #334155;text-decoration:none;color:#e5e7eb;background:#0b1222}
-  .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#0b1222;border:1px solid #22314b;font-weight:800}
-  .emoj{font-size:1.2rem}
   footer{background:#e5e7eb;color:#111827;text-align:center;font-weight:700}
 </style>
 </head>
 <body>
   <header><a class="back" href="./index.html">← Accueil</a></header>
   <main>
-    <h1 style="margin:0 0 6px">Fiche sécurité — EPS</h1>
-    <p class="muted" style="margin-top:-2px">Repères visuels pour la conduite à tenir en séance. <b>En cas de doute : interrompre, sécuriser, alerter 112 et suivre le protocole de l’établissement.</b></p>
+    <h1 style="margin:0 0 6px">Fiche sécurité — à lire par les élèves</h1>
+    <p class="muted" style="margin-top:-2px">En cas de problème, <b>préviens d’abord l’enseignant</b>. Suis les consignes, reste calme.</p>
 
-    <!-- Principes de base (prévention) -->
+    <!-- Prévention courte -->
     <section class="block">
-      <span class="tag prevention">🛡️ Prévention — principes</span>
-      <div class="grid cols-3">
-        <div class="card-callout">
-          <h3 class="title">Échauffement & tenue</h3>
-          <ul style="margin:6px 0 0 18px">
-            <li class="li">Échauffement progressif 8–12 min (général → spécifique).</li>
-            <li class="li">Chaussures adaptées, lacets noués, cheveux attachés.</li>
-            <li class="li">Retirer bijoux/objets coupants ; poches vides.</li>
-          </ul>
-        </div>
-        <div class="card-callout">
-          <h3 class="title">Espace & matériel</h3>
-          <ul style="margin:6px 0 0 18px">
-            <li class="li">Surface dégagée, lignes lisibles, zones de sécurité.</li>
-            <li class="li">Matériel stable, non glissant, rangé hors trajectoires.</li>
-            <li class="li">Consignes claires ; circulation des élèves contrôlée.</li>
-          </ul>
-        </div>
-        <div class="card-callout">
-          <h3 class="title">Hydratation & météo</h3>
-          <ul style="margin:6px 0 0 18px">
-            <li class="li">Boire régulièrement, avant d’avoir soif.</li>
-            <li class="li">Adapter charge & pauses à la chaleur/froid/vent.</li>
-            <li class="li">À la chaleur : zones d’ombre, casquette, crème solaire.</li>
-          </ul>
-        </div>
+      <div class="head">
+        <h2 class="title">Échauffement & Hydratation</h2>
+        <span class="tag">Prévention</span>
+      </div>
+      <div class="grad prev">
+        <ul>
+          <li>Échauffement progressif (8–12 min) avant l’effort.</li>
+          <li>Bois régulièrement, surtout par temps chaud.</li>
+          <li>Chaussures lacées, pas de bijoux, poches vides.</li>
+        </ul>
       </div>
     </section>
 
-    <!-- Urgences vitales -->
+    <!-- Urgences vitales : pour élèves -->
     <section class="block">
-      <span class="tag urgence">🚨 Urgences vitales — alerter sans délai</span>
-      <div class="cards">
-        <div class="card-callout">
-          <h3 class="title">Perte de connaissance / suspicion trauma grave</h3>
-          <ul style="margin:6px 0 0 18px">
-            <li class="li"><b>112</b> immédiatement. Ne pas laisser seul.</li>
-            <li class="li">Respiration OK → <b>PLS</b>. Pas de boisson/aliment.</li>
-            <li class="li">Respiration absente → <b>alerter + RCP si formé</b>.</li>
-            <li class="li">Traumatisme crânien/colonne : <b>ne pas mobiliser</b>.</li>
-          </ul>
-        </div>
-        <div class="card-callout">
-          <h3 class="title">Détresse respiratoire / allergie sévère</h3>
-          <ul style="margin:6px 0 0 18px">
-            <li class="li">Alerter <b>112</b>, position demi-assise, vêtements desserrés.</li>
-            <li class="li">Si trousse spécifique (ordonnance) : <b>suivre protocole</b>.</li>
-            <li class="li">Surveiller en continu, rassurer, noter l’heure.</li>
-          </ul>
-        </div>
+      <div class="head">
+        <h2 class="title">Urgences vitales — alerter sans délai</h2>
+        <span class="tag">Que faire tout de suite</span>
       </div>
-      <div class="cta" style="margin-top:8px">
-        <span class="pill emoj">📞 <b>112</b> — Urgences</span>
-        <span class="pill emoj">🏫 Protocole établissement</span>
-        <span class="pill emoj">🩺 Infirmerie / référent santé</span>
+      <div class="grad urg">
+        <ul>
+          <li><b>Commence par prévenir l’enseignant.</b></li>
+          <li><b>Ne vous agglutinez pas.</b> Un élève <b>reste avec le blessé</b>, un autre <b>part prévenir l’enseignant</b>.</li>
+          <li>L’enseignant s’occupe de l’alerte (infirmerie / 112) et des gestes à faire.</li>
+        </ul>
+        <ul>
+          <li>Signes d’alerte : perte de connaissance, respiration anormale, saignement abondant, douleur très forte, propos confus.</li>
+        </ul>
       </div>
     </section>
 
-    <!-- Blessures courantes -->
+    <!-- Blessures courantes (concis) -->
     <section class="block">
-      <span class="tag blessure">🩹 Blessures courantes — conduite à tenir</span>
-      <div class="cards">
-        <div class="card-callout">
-          <h3 class="title">Entorse / douleur articulaire ou musculaire</h3>
-          <ul style="margin:6px 0 0 18px">
-            <li class="li"><b>Arrêt immédiat</b>, protéger la zone.</li>
-            <li class="li"><b>Glace</b> 10–15 min (tissu interposé), à répéter.</li>
-            <li class="li"><b>Compression</b> modérée + <b>élévation</b> si possible.</li>
-            <li class="li">Orienter vers <b>infirmerie</b> / responsable légal. Évaluation médicale si douleur importante.</li>
-          </ul>
-        </div>
-        <div class="card-callout">
-          <h3 class="title">Plaies / saignements</h3>
-          <ul style="margin:6px 0 0 18px">
-            <li class="li"><b>Protection</b> (gants si disponibles).</li>
-            <li class="li">Nettoyer autour, <b>compression</b> de la plaie → pansement.</li>
-            <li class="li">Surveillance : signes d’infection, malaise.</li>
-            <li class="li">Si saignement abondant / profond : <b>112</b>.</li>
-          </ul>
-        </div>
+      <div class="head">
+        <h2 class="title">Blessures courantes — conduite à tenir</h2>
+        <span class="tag">Entorse / Plaie</span>
       </div>
-      <p class="muted" style="margin-top:6px">Ces repères ne remplacent pas une formation de premiers secours. Suivre en priorité le protocole de l’établissement et l’avis médical.</p>
+      <div class="grad bls">
+        <ul>
+          <li><b>Entorse / douleur</b> : arrêter l’activité, protéger la zone, prévenir l’enseignant. Si demandé : glace 10–15 min (tissu).</li>
+          <li><b>Plaie / saignement</b> : protéger (si possible), prévenir l’enseignant. Compression de la plaie si nécessaire.</li>
+        </ul>
+      </div>
     </section>
 
     <!-- Chaleur / déshydratation -->
     <section class="block">
-      <span class="tag chaleur">🌞 Chaleur / déshydratation</span>
-      <div class="grid cols-2">
-        <div class="card-callout">
-          <h3 class="title">Signes d’alerte</h3>
-          <ul style="margin:6px 0 0 18px">
-            <li class="li">Maux de tête, crampes, nausées, vertiges.</li>
-            <li class="li">Peau chaude/rouge, sudation excessive ou absente.</li>
-            <li class="li">Troubles du comportement / propos confus.</li>
-          </ul>
-        </div>
-        <div class="card-callout">
-          <h3 class="title">Que faire</h3>
-          <ul style="margin:6px 0 0 18px">
-            <li class="li">Mettre à l’ombre, rafraîchir (eau, serviette humide, ventilation).</li>
-            <li class="li">Hydratation par petites gorgées si état de conscience normal.</li>
-            <li class="li"><b>112</b> si aggravation / non amélioration rapide.</li>
-          </ul>
-        </div>
+      <div class="head">
+        <h2 class="title">Chaleur & Déshydratation</h2>
+        <span class="tag">Signes & gestes</span>
+      </div>
+      <div class="grad hot">
+        <ul>
+          <li>Signes : maux de tête, vertiges, crampes, nausées.</li>
+          <li>Gestes : aller à l’ombre, enlever la veste, boire par petites gorgées, prévenir l’enseignant.</li>
+        </ul>
       </div>
     </section>
 
-    <!-- Organisation & prévention continue -->
+    <!-- Hypoglycémie -->
     <section class="block">
-      <span class="tag prevention">🧭 Organisation de séance — check rapide</span>
-      <div class="checklist">
-        <div class="check"><b>1</b><div>Zones d’évolution <b>délimitées</b> et <b>dégagées</b> ; balisage en place.</div></div>
-        <div class="check"><b>2</b><div><b>Briefing</b> clair : objectifs, règles de sécurité, rôles des observateurs.</div></div>
-        <div class="check"><b>3</b><div>Trousse EPS (gants, compresses, bandes, poches froides, pansements, couverture de survie).</div></div>
-        <div class="check"><b>4</b><div>Plan d’alerte connu : <b>112</b>, infirmerie, points d’accès secours.</div></div>
+      <div class="head">
+        <h2 class="title">Hypoglycémie</h2>
+        <span class="tag">Baisse de sucre</span>
+      </div>
+      <div class="grad hypo">
+        <ul>
+          <li>Signes : tremblements, sueurs, pâleur, faim, mal de tête, propos confus.</li>
+          <li>Gestes : <b>prévenir l’enseignant</b>. Si la personne est consciente : boisson sucrée ou sucre rapide si l’enseignant l’autorise. Surveiller.</li>
+        </ul>
       </div>
     </section>
 
