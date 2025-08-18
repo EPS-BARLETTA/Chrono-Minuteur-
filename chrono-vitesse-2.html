@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chrono avec vitesse — v6.4</title>
+<link rel="icon" href="data:,">
+<script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+<script src="./qr-overlay.js"></script>
+</head>
+<body style="margin:0;background:#0f172a;color:#e5e7eb;font:16px/1.45 system-ui">
+<style>
+  :root{ --gA:#22c55e; --gB:#16a34a; --card:#111827; --border:#1f2937; }
+  .wrap{min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto}
+  header,footer{padding:10px 12px}
+  footer{background:#e5e7eb;color:#111827;text-align:center;font-weight:700}
+  .back{color:#a3aed5;text-decoration:none}
+  .main{display:grid;place-items:center;padding:18px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px;max-width:960px;width:94vw;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  .grid{display:grid;gap:12px}
+  @media(min-width:920px){.cols-5{grid-template-columns:repeat(5,1fr)}}
+  label{display:block;font-weight:800;margin:0 0 6px;text-align:center;font-size:clamp(14px,2.4vmin,20px)}
+  input,select{width:100%;padding:14px 14px;border-radius:12px;border:1px solid #334155;background:#0b1222;color:#e5e7eb;font-size:clamp(18px,2.8vmin,26px)}
+  input::placeholder{color:#a8b3c7;opacity:.85;font-size:clamp(18px,2.8vmin,26px)}
+  .fg{padding:2px;border-radius:14px;background:linear-gradient(135deg,var(--gA),var(--gB))}
+  .fg .inner{background:#0b1222;border-radius:12px;padding:10px;border:1px solid #1f2a43}
+  .row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+  .btn{padding:18px 24px;border:0;border-radius:14px;font-weight:900;cursor:pointer;min-width:200px;font-size:clamp(26px,6.4vmin,50px);line-height:1.05}
+  .btn-acc{background:#4f46e5;color:#fff}.btn-ok{background:#10b981;color:#083d31}
+  .btn-warn{background:#f59e0b;color:#1f1400}.btn-dgr{background:#ef4444;color:#2b0a0a}
+  .big{font-size:clamp(72px,26vmin,300px);font-weight:900;text-align:center;margin:10px 0;letter-spacing:1px}
+  .muted{color:#94a3b8;text-align:center}
+  .stat{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+  .box{background:#0b1222;border:1px solid #23304a;border-radius:12px;padding:10px;text-align:center}
+  .box b{font-size:1.2rem}
+  body.fs header, body.fs footer, body.fs .form, body.fs .qrbar{display:none}
+  body.fs .card{background:transparent;border:0;box-shadow:none;padding:0;width:100vw;max-width:100vw}
+  body.fs .big{font-size:clamp(96px,32vmin,360px)}
+  body.fs .btn{padding:26px 30px;font-size:clamp(30px,7.4vmin,64px)}
+  .build{text-align:center;color:#94a3b8;margin-top:6px;font-size:13px}
+</style>
+<div class="wrap">
+  <header><a class="back" href="./modes.html">← Modes</a></header>
+  <main class="main">
+    <div class="card">
+      <h2 style="margin:6px 0 4px;text-align:center">Chrono avec vitesse</h2>
+      <div class="build">Build v6.4 — 2025-08-18</div>
+
+      <div class="form">
+        <div class="grid cols-5">
+          <div class="fg"><div class="inner"><label>Nom</label><input id="nom" placeholder="Martin"></div></div>
+          <div class="fg"><div class="inner"><label>Prénom</label><input id="prenom" placeholder="Julie"></div></div>
+          <div class="fg"><div class="inner"><label>Classe</label><input id="classe" placeholder="4C"></div></div>
+          <div class="fg"><div class="inner"><label>Sexe</label><select id="sexe"><option value="F">F</option><option value="M">M</option></select></div></div>
+          <div class="fg"><div class="inner"><label>Distance (m)</label><input id="distm" type="number" min="10" step="1" value="100" inputmode="numeric"></div></div>
+        </div>
+      </div>
+
+      <div id="time" class="big">0:00.00</div>
+
+      <div class="row">
+        <button id="b-start" class="btn btn-acc">Démarrer</button>
+        <button id="b-stop" class="btn btn-warn" disabled>Stop</button>
+        <button id="b-reset" class="btn btn-dgr" disabled>Réinitialiser</button>
+        <button id="b-full" class="btn btn-ok">Plein écran</button>
+      </div>
+
+      <div class="stat">
+        <div class="box"><div class="muted">Distance</div><b id="dist-lbl">100 m</b></div>
+        <div class="box"><div class="muted">Vitesse moyenne</div><b id="v-kmh">0.00 km/h</b></div>
+      </div>
+
+      <div class="row qrbar" style="margin-top:12px">
+        <button id="b-qr" class="btn btn-acc" disabled>QR ScanProf</button>
+      </div>
+      <p class="muted" style="margin-top:6px">Le QR encode Nom/Prénom/Classe/Sexe, Distance et Temps (centi) + Vitesse.</p>
+    </div>
+  </main>
+  <footer>ChronoMinuteur - Equipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
+</div>
+
+<script>
+  const $=s=>document.querySelector(s);
+  let running=false, t0=0, elapsed=0, raf=null;
+
+  function fmtCenti(ms){ // m:ss.cc
+    const cs = Math.floor((ms%1000)/10);
+    const s  = Math.floor(ms/1000)%60;
+    const m  = Math.floor(ms/60000);
+    return m + ":" + String(s).padStart(2,'0') + "." + String(cs).padStart(2,'0');
+  }
+  function toSeconds(ms){ return ms/1000; }
+  function kmh(dist_m, sec){
+    return (dist_m>0 && sec>0) ? (dist_m/sec)*3.6 : 0;
+  }
+
+  function draw(){
+    $('#time').textContent = fmtCenti(elapsed);
+    const dist = Number($('#distm').value)||0;
+    $('#dist-lbl').textContent = dist + ' m';
+    const v = kmh(dist, toSeconds(elapsed));
+    $('#v-kmh').textContent = v.toFixed(2)+' km/h';
+  }
+  function tick(){
+    if(!running) return;
+    elapsed = performance.now() - t0;
+    draw();
+    raf = requestAnimationFrame(tick);
+  }
+
+  $('#distm').oninput = draw;
+
+  $('#b-start').onclick = ()=>{
+    if(running) return;
+    running = true;
+    t0 = performance.now() - elapsed;
+    $('#b-start').disabled = true;
+    $('#b-stop').disabled = false;
+    $('#b-reset').disabled = true;
+    $('#b-qr').disabled = true;
+    tick();
+  };
+  $('#b-stop').onclick = ()=>{
+    if(!running) return;
+    running = false;
+    cancelAnimationFrame(raf);
+    $('#b-start').disabled = false;
+    $('#b-stop').disabled = true;
+    $('#b-reset').disabled = false;
+    $('#b-qr').disabled = false;
+  };
+  $('#b-reset').onclick = ()=>{
+    running = false;
+    cancelAnimationFrame(raf);
+    elapsed = 0;
+    $('#b-start').disabled = false;
+    $('#b-stop').disabled = true;
+    $('#b-reset').disabled = true;
+    $('#b-qr').disabled = true;
+    draw();
+  };
+
+  function toggleFS(){ if(!document.fullscreenElement){ document.documentElement.requestFullscreen(); } else { document.exitFullscreen(); } }
+  $('#b-full').onclick = toggleFS;
+  document.addEventListener('fullscreenchange', ()=>{
+    document.body.classList.toggle('fs', !!document.fullscreenElement);
+  });
+
+  // QR
+  $('#b-qr').onclick = ()=>{
+    const nom=$('#nom').value.trim(), prenom=$('#prenom').value.trim(), classe=$('#classe').value.trim();
+    let sexe=$('#sexe').value; sexe=(sexe==='M'||sexe==='F')?sexe:'F';
+    if(!nom||!prenom||!classe){ alert('Identité incomplète.'); return; }
+    const dist_m = Math.max(1, Number($('#distm').value)||0);
+    const sec    = toSeconds(elapsed);
+    const temps  = fmtCenti(elapsed); // m:ss.cc
+    const payload = { nom, prenom, classe, sexe, Mode:"Chrono vitesse", Distance_m:dist_m, Temps:temps, Temps_s:+sec.toFixed(2), Vitesse_kmh:+kmh(dist_m,sec).toFixed(2) };
+    if(window.showQROverlay){ showQROverlay(payload, 'QR_'+nom+'_'+prenom); } else { alert('qr-overlay.js manquant'); }
+  };
+
+  draw();
+</script>
+</body>
+</html>
