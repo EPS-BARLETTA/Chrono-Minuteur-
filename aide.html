@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aide — ChronoMinuteur</title>
+<style>
+  :root{
+    --simple-a:#0ea5e9;  --simple-b:#3b82f6;
+    --vit-a:#22c55e;     --vit-b:#16a34a;
+    --min-a:#f59e0b;     --min-b:#ef4444;
+    --dist-a:#06b6d4;    --dist-b:#8b5cf6;
+    --fg:#e5e7eb; --muted:#cbd5e1; --bg:#0f172a; --card:#0b1222; --border:#1f2937;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+  header,footer{padding:12px 16px}
+  a.back{color:#a3aed5;text-decoration:none}
+  main{max-width:1100px;margin:0 auto;padding:18px;display:grid;gap:16px}
+  h1{margin:0 0 8px}
+  p.lead{margin:0 0 8px;color:var(--muted)}
+  .block{position:relative;border:1px solid var(--border);border-radius:18px;padding:14px;background:var(--card);box-shadow:0 10px 30px rgba(0,0,0,.35);overflow:hidden}
+  .block::before{content:"";position:absolute;inset:0 0 auto 0;height:8px}
+  .simple::before{background:linear-gradient(90deg,var(--simple-a),var(--simple-b))}
+  .vitesse::before{background:linear-gradient(90deg,var(--vit-a),var(--vit-b))}
+  .minuteur::before{background:linear-gradient(90deg,var(--min-a),var(--min-b))}
+  .distance::before{background:linear-gradient(90deg,var(--dist-a),var(--dist-b))}
+  .head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:2px 0 10px}
+  .title{margin:0;font-size:1.15rem}
+  .tag{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;font-weight:900;font-size:.85rem;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06)}
+  .dot{width:12px;height:12px;border-radius:999px}
+  .dot-simple{background:linear-gradient(135deg,var(--simple-a),var(--simple-b))}
+  .dot-vitesse{background:linear-gradient(135deg,var(--vit-a),var(--vit-b))}
+  .dot-minuteur{background:linear-gradient(135deg,var(--min-a),var(--min-b))}
+  .dot-distance{background:linear-gradient(135deg,var(--dist-a),var(--dist-b))}
+  ul{margin:6px 0 0 18px}
+  li{margin:6px 0}
+  .content{border-radius:12px;padding:12px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01))}
+  footer{background:#e5e7eb;color:#111827;text-align:center;font-weight:700}
+</style>
+</head>
+<body>
+  <header><a class="back" href="./index.html">← Accueil</a></header>
+  <main>
+    <h1>Aide — mode de fonctionnement</h1>
+    <p class="lead">Étapes essentielles, mode par mode. En plein écran, seuls les <b>boutons</b> restent visibles.</p>
+
+    <section class="block simple">
+      <div class="head">
+        <h2 class="title">Chrono simple</h2>
+        <span class="tag"><span class="dot dot-simple"></span>Affichage géant</span>
+      </div>
+      <div class="content">
+        <ul>
+          <li><b>Démarrer</b> → chrono en route. <b>Stop</b> → figer. <b>Réinitialiser</b> → zéro.</li>
+          <li><b>Plein écran</b> pour maximiser la visibilité.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="block vitesse">
+      <div class="head">
+        <h2 class="title">Chrono avec vitesse</h2>
+        <span class="tag"><span class="dot dot-vitesse"></span>Sprint / distance fixe</span>
+      </div>
+      <div class="content">
+        <ul>
+          <li>Saisir identité et <b>Distance (m)</b>.</li>
+          <li><b>Démarrer</b> au signal, <b>Stop</b> à l’arrivée.</li>
+          <li>Le temps (centième) et la <b>vitesse moyenne</b> sont calculés.</li>
+          <li><b>QR ScanProf</b> pour enregistrer.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="block minuteur">
+      <div class="head">
+        <h2 class="title">Minuteur simple</h2>
+        <span class="tag"><span class="dot dot-minuteur"></span>Compte à rebours</span>
+      </div>
+      <div class="content">
+        <ul>
+          <li>Régler <b>Minutes</b> et <b>Secondes</b>.</li>
+          <li><b>Lancer</b> → décompte <b>3‑2‑1</b> puis départ (bip).</li>
+          <li><b>Pause</b> / <b>Réinitialiser</b> selon besoin. <b>Plein écran</b> conseillé.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="block distance">
+      <div class="head">
+        <h2 class="title">Minuteur distance & vitesse</h2>
+        <span class="tag"><span class="dot dot-distance"></span>Course au temps</span>
+      </div>
+      <div class="content">
+        <ul>
+          <li>Saisir identité + <b>Piste (m)</b> + <b>Minutes</b>/<b>Secondes</b>.</li>
+          <li><b>Lancer</b> (3‑2‑1), puis appuyer <b>+1 tour</b> à chaque passage.</li>
+          <li>Fin : choisir la <b>fraction</b> (0 / ¼ / ½ / ¾), voir <b>distance totale</b>, <b>vitesse</b> et <b>VMA</b> (si ≥ 6’).</li>
+          <li><b>QR ScanProf</b> pour sauvegarder.</li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+  <footer>ChronoMinuteur - Equipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
+</body>
+</html>
